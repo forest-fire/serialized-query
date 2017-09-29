@@ -1,5 +1,5 @@
 export interface ISimplifiedDBAdaptor {
-  ref: (path: string) => FirebaseQuery;
+  ref: (path: string) => any;
 }
 
 export type LazyPath = () => string;
