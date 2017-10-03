@@ -4,6 +4,10 @@ export interface ISimplifiedDBAdaptor {
 
 export type LazyPath = () => string;
 
+export function slashNotation(path: string) {
+  return path.replace(/\./g, '/');
+}
+
 /**
  * Provides a way to serialize the full characteristics of a
  * Firebase query
@@ -23,7 +27,7 @@ export class SerializedQuery {
   protected _equalTo: string;
 
   constructor(path: string | LazyPath) {
-    this._path = path;
+    this._path = typeof path === 'string' ? slashNotation(path) : path;
   }
 
   public limitToFirst(num: number) {
@@ -73,7 +77,7 @@ export class SerializedQuery {
   /** generate a Firebase query from serialized state */
   public execute(db: ISimplifiedDBAdaptor) {
     let q = db.ref(
-      typeof this._path === 'function' ? this._path() : this._path
+      typeof this._path === 'function' ? slashNotation(this._path()) : this._path
     );
     switch (this._orderBy) {
       case 'orderByKey':
