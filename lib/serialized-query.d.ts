@@ -3,8 +3,10 @@ export interface ISimplifiedDBAdaptor {
     ref: (path: string) => any;
 }
 export declare type LazyPath = () => string;
+export declare function slashNotation(path: string): string;
 export declare class SerializedQuery {
     static path(path: string | LazyPath): SerializedQuery;
+    protected _db: ISimplifiedDBAdaptor;
     protected _path: string | LazyPath;
     protected _limitToFirst: number;
     protected _limitToLast: number;
@@ -22,6 +24,7 @@ export declare class SerializedQuery {
     startAt(value: any, key?: string): this;
     endAt(value: any, key?: string): this;
     equalTo(value: any, key?: string): this;
-    execute(db: ISimplifiedDBAdaptor): FirebaseQuery;
-    private noKeyOnKeySort(caller, key);
+    setDB(db: ISimplifiedDBAdaptor): void;
+    execute(db?: ISimplifiedDBAdaptor): FirebaseQuery;
+    private validateNoKey(caller, key);
 }
