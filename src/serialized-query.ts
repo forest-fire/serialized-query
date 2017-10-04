@@ -1,3 +1,4 @@
+import { ISnapShot } from 'typed-conversions';
 export interface ISimplifiedDBAdaptor {
   ref: (path: string) => any;
 }
@@ -27,7 +28,7 @@ export class SerializedQuery<T = any> {
   protected _endAt: string;
   protected _equalTo: string;
 
-  protected _handleSnapshot: (snap: FirebaseDataSnapshot) => any;
+  protected _handleSnapshot: (snap: ISnapShot) => any;
 
   constructor(path: string | LazyPath) {
     this._path = typeof path === 'string' ? slashNotation(path) : path;
@@ -109,11 +110,11 @@ export class SerializedQuery<T = any> {
     if (this._startAt) { q = q.startAt(this._startAt); }
     if (this._equalTo) { q = q.equalTo(this._equalTo); }
 
-    return q as FirebaseQuery;
+    return q;
   }
 
   /** allows you to add a handler for snapshots when recieved from the execute() method */
-  public handleSnapshot(fn: (snap: FirebaseDataSnapshot) => any) {
+  public handleSnapshot(fn: (snap: ISnapShot) => any) {
     this._handleSnapshot = fn;
   }
 

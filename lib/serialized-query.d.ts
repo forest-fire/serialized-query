@@ -1,4 +1,4 @@
-/// <reference types="firebase" />
+import { ISnapShot } from 'typed-conversions';
 export interface ISimplifiedDBAdaptor {
     ref: (path: string) => any;
 }
@@ -15,7 +15,7 @@ export declare class SerializedQuery<T = any> {
     protected _startAt: string;
     protected _endAt: string;
     protected _equalTo: string;
-    protected _handleSnapshot: (snap: FirebaseDataSnapshot) => any;
+    protected _handleSnapshot: (snap: ISnapShot) => any;
     constructor(path: string | LazyPath);
     limitToFirst(num: number): this;
     limitToLast(num: number): this;
@@ -26,8 +26,8 @@ export declare class SerializedQuery<T = any> {
     endAt(value: any, key?: string): this;
     equalTo(value: any, key?: string): this;
     setDB(db: ISimplifiedDBAdaptor): this;
-    deserialize(db?: ISimplifiedDBAdaptor): FirebaseQuery;
-    handleSnapshot(fn: (snap: FirebaseDataSnapshot) => any): void;
+    deserialize(db?: ISimplifiedDBAdaptor): any;
+    handleSnapshot(fn: (snap: ISnapShot) => any): void;
     execute(db?: ISimplifiedDBAdaptor): Promise<any>;
     private validateNoKey(caller, key);
 }
