@@ -78,10 +78,11 @@ export class SerializedQuery {
   /** Allows the DB interface to be setup early, allowing clients to call execute without any params */
   public setDB(db: ISimplifiedDBAdaptor) {
     this._db = db;
+    return this;
   }
 
   /** generate a Firebase query from serialized state */
-  public execute(db?: ISimplifiedDBAdaptor) {
+  public deserialize(db?: ISimplifiedDBAdaptor) {
     if (!db) {
       db = this._db;
     }
@@ -107,6 +108,12 @@ export class SerializedQuery {
     if (this._equalTo) { q = q.equalTo(this._equalTo); }
 
     return q as FirebaseQuery;
+  }
+
+  /** execute the query as a one time fetch */
+  public async execute(db?: ISimplifiedDBAdaptor) {
+    if (!db) { db = this._db; }
+    return this.deserialize(db).once('value');
   }
 
   private validateNoKey(caller: string, key: string) {

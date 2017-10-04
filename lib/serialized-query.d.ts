@@ -24,7 +24,7 @@ export declare class SerializedQuery {
     startAt(value: any, key?: string): this;
     endAt(value: any, key?: string): this;
     equalTo(value: any, key?: string): this;
-    setDB(db: ISimplifiedDBAdaptor): void;
+    setDB(db: ISimplifiedDBAdaptor): this;
     execute(db?: ISimplifiedDBAdaptor): FirebaseQuery;
     private validateNoKey(caller, key);
 }
