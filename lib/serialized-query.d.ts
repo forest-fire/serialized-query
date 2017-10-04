@@ -27,7 +27,7 @@ export declare class SerializedQuery<T = any> {
     equalTo(value: any, key?: string): this;
     setDB(db: ISimplifiedDBAdaptor): this;
     deserialize(db?: ISimplifiedDBAdaptor): any;
-    handleSnapshot(fn: (snap: ISnapShot) => any): void;
-    execute(db?: ISimplifiedDBAdaptor): Promise<any>;
+    handleSnapshot(fn: (snap: ISnapShot) => any): this;
+    execute(): Promise<any>;
     private validateNoKey(caller, key);
 }

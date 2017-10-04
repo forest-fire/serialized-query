@@ -116,12 +116,12 @@ export class SerializedQuery<T = any> {
   /** allows you to add a handler for snapshots when recieved from the execute() method */
   public handleSnapshot(fn: (snap: ISnapShot) => any) {
     this._handleSnapshot = fn;
+    return this;
   }
 
   /** execute the query as a one time fetch */
-  public async execute(db?: ISimplifiedDBAdaptor) {
-    if (!db) { db = this._db; }
-    const snap = await this.deserialize(db).once('value');
+  public async execute() {
+    const snap = await this.deserialize().once('value');
     return this._handleSnapshot
       ? this._handleSnapshot(snap)
       : snap;
