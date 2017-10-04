@@ -5,7 +5,7 @@ export interface ISimplifiedDBAdaptor {
 export declare type LazyPath = () => string;
 export declare function slashNotation(path: string): string;
 export declare class SerializedQuery<T = any> {
-    static path(path: string | LazyPath): SerializedQuery<any>;
+    static path<T = any>(path: string | LazyPath): SerializedQuery<T>;
     protected _db: ISimplifiedDBAdaptor;
     protected _path: string | LazyPath;
     protected _limitToFirst: number;

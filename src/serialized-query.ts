@@ -13,8 +13,8 @@ export function slashNotation(path: string) {
  * Firebase query
  */
 export class SerializedQuery<T = any> {
-  public static path(path: string | LazyPath) {
-    const q = new SerializedQuery(path);
+  public static path<T = any>(path: string | LazyPath) {
+    const q = new SerializedQuery<T>(path);
     return q;
   }
   protected _db: ISimplifiedDBAdaptor;
