@@ -1,10 +1,11 @@
-import thingy = require("../src/thingy");
+import {SerializedQuery} from "../src/serialized-query");
 import * as chai from "chai";
 
 const expect = chai.expect;
 
-describe("thingy", () => {
-  it("should do something", () => {
-    expect(thingy).to.not.equal(undefined);
+describe("Serialized Query: ", () => {
+  it("instantiate with path()", () => {
+    const q = SerializedQuery.path('foo');
+    expect(q).to.be.an.instanceOf(SerializedQuery);
   });
 });

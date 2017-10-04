@@ -17,6 +17,7 @@ export class SerializedQuery {
     const q = new SerializedQuery(path);
     return q;
   }
+  protected _db: ISimplifiedDBAdaptor;
   protected _path: string | LazyPath;
   protected _limitToFirst: number;
   protected _limitToLast: number;
@@ -57,25 +58,33 @@ export class SerializedQuery {
   }
 
   public startAt(value: any, key?: string) {
-    this.noKeyOnKeySort('startAt', key);
+    this.validateNoKey('startAt', key);
     this._startAt = value;
     return this;
   }
 
   public endAt(value: any, key?: string) {
-    this.noKeyOnKeySort('endAt', key);
+    this.validateNoKey('endAt', key);
     this._endAt = value;
     return this;
   }
 
   public equalTo(value: any, key?: string) {
-    this.noKeyOnKeySort('equalTo', key);
+    this.validateNoKey('equalTo', key);
     this._equalTo = value;
     return this;
   }
 
+  /** Allows the DB interface to be setup early, allowing clients to call execute without any params */
+  public setDB(db: ISimplifiedDBAdaptor) {
+    this._db = db;
+  }
+
   /** generate a Firebase query from serialized state */
-  public execute(db: ISimplifiedDBAdaptor) {
+  public execute(db?: ISimplifiedDBAdaptor) {
+    if (!db) {
+      db = this._db;
+    }
     let q = db.ref(
       typeof this._path === 'function' ? slashNotation(this._path()) : this._path
     );
@@ -100,7 +109,7 @@ export class SerializedQuery {
     return q as FirebaseQuery;
   }
 
-  private noKeyOnKeySort(caller: string, key: string) {
+  private validateNoKey(caller: string, key: string) {
     if (key && this._orderBy === 'orderByKey') {
       throw new Error(`You can not use the "key" parameter with ${caller}() when using the ${this._orderBy} sort.`);
     }
