@@ -12,7 +12,7 @@ export function slashNotation(path: string) {
  * Provides a way to serialize the full characteristics of a
  * Firebase query
  */
-export class SerializedQuery {
+export class SerializedQuery<T = any> {
   public static path(path: string | LazyPath) {
     const q = new SerializedQuery(path);
     return q;
@@ -26,6 +26,8 @@ export class SerializedQuery {
   protected _startAt: string;
   protected _endAt: string;
   protected _equalTo: string;
+
+  protected _handleSnapshot: (snap: FirebaseDataSnapshot) => any;
 
   constructor(path: string | LazyPath) {
     this._path = typeof path === 'string' ? slashNotation(path) : path;
@@ -110,10 +112,18 @@ export class SerializedQuery {
     return q as FirebaseQuery;
   }
 
+  /** allows you to add a handler for snapshots when recieved from the execute() method */
+  public handleSnapshot(fn: (snap: FirebaseDataSnapshot) => any) {
+    this._handleSnapshot = fn;
+  }
+
   /** execute the query as a one time fetch */
   public async execute(db?: ISimplifiedDBAdaptor) {
     if (!db) { db = this._db; }
-    return this.deserialize(db).once('value');
+    const snap = await this.deserialize(db).once('value');
+    return this._handleSnapshot
+      ? this._handleSnapshot(snap)
+      : snap;
   }
 
   private validateNoKey(caller: string, key: string) {
