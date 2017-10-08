@@ -17,6 +17,7 @@ export declare class SerializedQuery<T = any> {
     protected _equalTo: string;
     protected _handleSnapshot: (snap: ISnapShot) => any;
     constructor(path: string | LazyPath);
+    readonly path: string | LazyPath;
     limitToFirst(num: number): this;
     limitToLast(num: number): this;
     orderByChild(child: string): this;

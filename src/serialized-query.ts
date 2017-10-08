@@ -15,8 +15,7 @@ export function slashNotation(path: string) {
  */
 export class SerializedQuery<T = any> {
   public static path<T = any>(path: string | LazyPath) {
-    const q = new SerializedQuery<T>(path);
-    return q;
+    return new SerializedQuery<T>(path);
   }
   protected _db: ISimplifiedDBAdaptor;
   protected _path: string | LazyPath;
@@ -32,6 +31,10 @@ export class SerializedQuery<T = any> {
 
   constructor(path: string | LazyPath) {
     this._path = typeof path === 'string' ? slashNotation(path) : path;
+  }
+
+  public get path() {
+    return this._path;
   }
 
   public limitToFirst(num: number) {
@@ -85,7 +88,7 @@ export class SerializedQuery<T = any> {
   }
 
   /** generate a Firebase query from serialized state */
-  public deserialize(db?: ISimplifiedDBAdaptor) {
+  public deserialize(db?: ISimplifiedDBAdaptor)  {
     if (!db) {
       db = this._db;
     }
