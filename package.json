@@ -1,17 +1,12 @@
 {
   "name": "serialized-query",
-  "version": "0.2.7",
+  "version": "0.2.9",
   "description": "A simple Typescript class to serialize Firebase queries",
   "license": "MIT",
   "repository": "https://github.com/forest-fire/serialized-query.git",
   "author": "Ken Snyder <ken@ken.net>",
-  "keywords": [
-    "firebase",
-    "typescript"
-  ],
-  "files": [
-    "lib"
-  ],
+  "keywords": ["firebase", "typescript"],
+  "files": ["lib"],
   "main": "lib/serialized-query.js",
   "typings": "lib/serialized-query.d.ts",
   "scripts": {
@@ -20,18 +15,19 @@
     "build": "ts-node ./scripts/build.ts",
     "deploy": "ts-node ./scripts/deploy.ts",
     "test": "ts-node ./scripts/test.ts ",
-    "coverage": "nyc --reporter=text --reporter=html mocha --compilers ts:ts-node/register",
+    "coverage":
+      "nyc --reporter=text --reporter=html mocha --compilers ts:ts-node/register",
     "watch": "ts-node ./scripts/watch.ts",
     "watch:test": "ts-node ./scripts/watch.ts test",
     "watch:all": "ts-node ./scripts/watch.ts all",
     "cli": "ts-node cli/index.ts --"
   },
   "dependencies": {
-    "@types/firebase": "^2.4.32",
-    "common-types": "^1.1.0",
+    "common-types": "^1.5.1",
     "moment": "^2.0.0"
   },
   "devDependencies": {
+    "@types/firebase": "^2.4.32",
     "@types/chai": "^3.0.0",
     "@types/chalk": "^0.4.31",
     "@types/chance": "^0.7.33",
