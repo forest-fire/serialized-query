@@ -1,4 +1,4 @@
-import { ISnapShot } from "typed-conversions";
+import { rtdb } from "firebase-api-surface";
 export interface ISimplifiedDBAdaptor {
   ref: (path: string) => any;
 }
@@ -31,7 +31,7 @@ export class SerializedQuery<T = any> {
   protected _endAt: string;
   protected _equalTo: string;
 
-  protected _handleSnapshot: (snap: ISnapShot) => any;
+  protected _handleSnapshot: (snap: rtdb.IDataSnapshot) => any;
 
   constructor(path: string | LazyPath) {
     this._path = typeof path === "string" ? slashNotation(path) : path;
@@ -131,7 +131,7 @@ export class SerializedQuery<T = any> {
   }
 
   /** allows you to add a handler for snapshots when recieved from the execute() method */
-  public handleSnapshot(fn: (snap: ISnapShot) => any) {
+  public handleSnapshot(fn: (snap: rtdb.IDataSnapshot) => any) {
     this._handleSnapshot = fn;
     return this;
   }

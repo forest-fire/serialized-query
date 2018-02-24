@@ -1,4 +1,4 @@
-import { ISnapShot } from "typed-conversions";
+import { rtdb } from "firebase-api-surface";
 export interface ISimplifiedDBAdaptor {
     ref: (path: string) => any;
 }
@@ -15,7 +15,7 @@ export declare class SerializedQuery<T = any> {
     protected _startAt: string;
     protected _endAt: string;
     protected _equalTo: string;
-    protected _handleSnapshot: (snap: ISnapShot) => any;
+    protected _handleSnapshot: (snap: rtdb.IDataSnapshot) => any;
     constructor(path: string | LazyPath);
     readonly path: string | LazyPath;
     limitToFirst(num: number): this;
@@ -28,7 +28,7 @@ export declare class SerializedQuery<T = any> {
     equalTo(value: any, key?: string): this;
     setDB(db: ISimplifiedDBAdaptor): this;
     deserialize(db?: ISimplifiedDBAdaptor): any;
-    handleSnapshot(fn: (snap: ISnapShot) => any): this;
+    handleSnapshot(fn: (snap: rtdb.IDataSnapshot) => any): this;
     execute(): Promise<any>;
     toJSON(): string;
     toString(): string;
