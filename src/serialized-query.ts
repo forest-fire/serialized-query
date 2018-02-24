@@ -1,4 +1,4 @@
-import { ISnapShot } from 'typed-conversions';
+import { ISnapShot } from "typed-conversions";
 export interface ISimplifiedDBAdaptor {
   ref: (path: string) => any;
 }
@@ -6,7 +6,7 @@ export interface ISimplifiedDBAdaptor {
 export type LazyPath = () => string;
 
 export function slashNotation(path: string) {
-  return path.replace(/\./g, '/');
+  return path.replace(/\./g, "/");
 }
 
 /**
@@ -14,14 +14,18 @@ export function slashNotation(path: string) {
  * Firebase query
  */
 export class SerializedQuery<T = any> {
-  public static path<T = any>(path: string | LazyPath) {
+  public static path<T = any>(path: string | LazyPath = "/") {
     return new SerializedQuery<T>(path);
   }
   protected _db: ISimplifiedDBAdaptor;
   protected _path: string | LazyPath;
   protected _limitToFirst: number;
   protected _limitToLast: number;
-  protected _orderBy: 'orderByChild' | 'orderByKey' | 'orderByValue' | 'orderByValue' = 'orderByKey';
+  protected _orderBy:
+    | "orderByChild"
+    | "orderByKey"
+    | "orderByValue"
+    | "orderByValue" = "orderByKey";
   protected _orderKey: string;
   protected _startAt: string;
   protected _endAt: string;
@@ -30,7 +34,7 @@ export class SerializedQuery<T = any> {
   protected _handleSnapshot: (snap: ISnapShot) => any;
 
   constructor(path: string | LazyPath) {
-    this._path = typeof path === 'string' ? slashNotation(path) : path;
+    this._path = typeof path === "string" ? slashNotation(path) : path;
   }
 
   public get path() {
@@ -48,35 +52,35 @@ export class SerializedQuery<T = any> {
   }
 
   public orderByChild(child: string) {
-    this._orderBy = 'orderByChild';
+    this._orderBy = "orderByChild";
     this._orderKey = child;
     return this;
   }
 
   public orderByValue() {
-    this._orderBy = 'orderByValue';
+    this._orderBy = "orderByValue";
     return this;
   }
 
   public orderByKey() {
-    this._orderBy = 'orderByKey';
+    this._orderBy = "orderByKey";
     return this;
   }
 
   public startAt(value: any, key?: string) {
-    this.validateNoKey('startAt', key);
+    this.validateNoKey("startAt", key);
     this._startAt = value;
     return this;
   }
 
   public endAt(value: any, key?: string) {
-    this.validateNoKey('endAt', key);
+    this.validateNoKey("endAt", key);
     this._endAt = value;
     return this;
   }
 
   public equalTo(value: any, key?: string) {
-    this.validateNoKey('equalTo', key);
+    this.validateNoKey("equalTo", key);
     this._equalTo = value;
     return this;
   }
@@ -88,30 +92,40 @@ export class SerializedQuery<T = any> {
   }
 
   /** generate a Firebase query from serialized state */
-  public deserialize(db?: ISimplifiedDBAdaptor)  {
+  public deserialize(db?: ISimplifiedDBAdaptor) {
     if (!db) {
       db = this._db;
     }
-    let q = db.ref(
-      typeof this._path === 'function' ? slashNotation(this._path()) : this._path
-    );
+    let q = db.ref(typeof this._path === "function" ? slashNotation(this._path()) : this._path);
     switch (this._orderBy) {
-      case 'orderByKey':
+      case "orderByKey":
         q = q.orderByKey();
         break;
-      case 'orderByValue':
+      case "orderByValue":
         q = q.orderByValue();
         break;
-      case 'orderByChild':
+      case "orderByChild":
         q = q.orderByChild(this._orderKey);
         break;
     }
-    if (this._limitToFirst) { q = q.limitToFirst(this._limitToFirst); }
-    if (this._limitToLast) { q = q.limitToLast(this._limitToLast); }
-    if (this._startAt) { q = q.startAt(this._startAt); }
-    if (this._endAt) { q = q.endAt(this._endAt); }
-    if (this._startAt) { q = q.startAt(this._startAt); }
-    if (this._equalTo) { q = q.equalTo(this._equalTo); }
+    if (this._limitToFirst) {
+      q = q.limitToFirst(this._limitToFirst);
+    }
+    if (this._limitToLast) {
+      q = q.limitToLast(this._limitToLast);
+    }
+    if (this._startAt) {
+      q = q.startAt(this._startAt);
+    }
+    if (this._endAt) {
+      q = q.endAt(this._endAt);
+    }
+    if (this._startAt) {
+      q = q.startAt(this._startAt);
+    }
+    if (this._equalTo) {
+      q = q.equalTo(this._equalTo);
+    }
 
     return q;
   }
@@ -124,16 +138,32 @@ export class SerializedQuery<T = any> {
 
   /** execute the query as a one time fetch */
   public async execute() {
-    const snap = await this.deserialize().once('value');
-    return this._handleSnapshot
-      ? this._handleSnapshot(snap)
-      : snap;
+    const snap = await this.deserialize().once("value");
+    return this._handleSnapshot ? this._handleSnapshot(snap) : snap;
+  }
+
+  public toJSON() {
+    return JSON.stringify({
+      orderBy: this._orderBy,
+      orderByKey: this._orderKey,
+      limitToFirst: this._limitToFirst,
+      limitToLast: this._limitToLast,
+      startAt: this._startAt,
+      endAt: this._endAt,
+      equalTo: this._equalTo,
+      path: this._path
+    });
+  }
+
+  public toString() {
+    return this.toJSON();
   }
 
   private validateNoKey(caller: string, key: string) {
-    if (key && this._orderBy === 'orderByKey') {
-      throw new Error(`You can not use the "key" parameter with ${caller}() when using the ${this._orderBy} sort.`);
+    if (key && this._orderBy === "orderByKey") {
+      throw new Error(
+        `You can not use the "key" parameter with ${caller}() when using the ${this._orderBy} sort.`
+      );
     }
   }
-
 }
