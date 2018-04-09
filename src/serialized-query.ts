@@ -44,6 +44,11 @@ export class SerializedQuery<T = any> {
     return this._path;
   }
 
+  public setPath(p: string | LazyPath) {
+    this._path = p;
+    return this;
+  }
+
   public limitToFirst(num: number) {
     this._limitToFirst = num;
     return this;
