@@ -44,8 +44,8 @@ export class SerializedQuery<T = any> {
     return this._path;
   }
 
-  public setPath(p: string | LazyPath) {
-    this._path = p;
+  public setPath(path: string | LazyPath) {
+    this._path = typeof path === "string" ? slashNotation(path) : path;
     return this;
   }
 
@@ -138,7 +138,7 @@ export class SerializedQuery<T = any> {
     return q;
   }
 
-  /** allows you to add a handler for snapshots when recieved from the execute() method */
+  /** allows you to add a handler/transformer for snapshots with the results of the execute() method */
   public handleSnapshot(fn: (snap: rtdb.IDataSnapshot) => any) {
     this._handleSnapshot = fn;
     return this;
