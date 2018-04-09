@@ -44,8 +44,8 @@ export class SerializedQuery<T = any> {
     return this._path;
   }
 
-  public setPath(p: string | LazyPath) {
-    this._path = p;
+  public setPath(path: string | LazyPath) {
+    this._path = typeof path === "string" ? slashNotation(path) : path;
     return this;
   }
 
