@@ -9,6 +9,9 @@ export function slashNotation(path: string) {
   return path.replace(/\./g, "/");
 }
 
+export type IComparisonOperator = "=" | ">" | "<";
+export type IConditionAndValue = [IComparisonOperator, boolean | string | number];
+
 /**
  * Provides a way to serialize the full characteristics of a
  * Firebase query
@@ -17,7 +20,7 @@ export class SerializedQuery<T = any> {
   public static path<T = any>(path: string | LazyPath = "/") {
     return new SerializedQuery<T>(path);
   }
-  protected _db: ISimplifiedDBAdaptor;
+  public db: ISimplifiedDBAdaptor;
   protected _path: string | LazyPath;
   protected _limitToFirst: number;
   protected _limitToLast: number;
@@ -26,14 +29,14 @@ export class SerializedQuery<T = any> {
     | "orderByKey"
     | "orderByValue"
     | "orderByValue" = "orderByKey";
-  protected _orderKey: string;
+  protected _orderKey: keyof T;
   protected _startAt: string;
   protected _endAt: string;
   protected _equalTo: string;
 
   protected _handleSnapshot: (snap: rtdb.IDataSnapshot) => any;
 
-  constructor(path: string | LazyPath) {
+  constructor(path: string | LazyPath = "/") {
     this._path = typeof path === "string" ? slashNotation(path) : path;
   }
 
@@ -51,7 +54,7 @@ export class SerializedQuery<T = any> {
     return this;
   }
 
-  public orderByChild(child: string) {
+  public orderByChild(child: keyof T) {
     this._orderBy = "orderByChild";
     this._orderKey = child;
     return this;
@@ -87,14 +90,14 @@ export class SerializedQuery<T = any> {
 
   /** Allows the DB interface to be setup early, allowing clients to call execute without any params */
   public setDB(db: ISimplifiedDBAdaptor) {
-    this._db = db;
+    this.db = db;
     return this;
   }
 
   /** generate a Firebase query from serialized state */
   public deserialize(db?: ISimplifiedDBAdaptor) {
     if (!db) {
-      db = this._db;
+      db = this.db;
     }
     let q = db.ref(typeof this._path === "function" ? slashNotation(this._path()) : this._path);
     switch (this._orderBy) {
@@ -142,6 +145,22 @@ export class SerializedQuery<T = any> {
     return this._handleSnapshot ? this._handleSnapshot(snap) : snap;
   }
 
+  /** allows a shorthand notation for simple serialized queries */
+  public where<V>(operation: IComparisonOperator, value: V) {
+    switch (operation) {
+      case "=":
+        return this.equalTo(value);
+      case ">":
+        return this.startAt(value);
+      case "<":
+        return this.endAt(value);
+      default:
+        const e: any = new Error(`Unknown comparison operator: ${operation}`);
+        e.code = "invalid-operator";
+        throw e;
+    }
+  }
+
   public toJSON() {
     return JSON.stringify({
       orderBy: this._orderBy,
@@ -156,7 +175,20 @@ export class SerializedQuery<T = any> {
   }
 
   public toString() {
-    return this.toJSON();
+    return JSON.stringify(
+      {
+        orderBy: this._orderBy,
+        orderByKey: this._orderKey,
+        limitToFirst: this._limitToFirst,
+        limitToLast: this._limitToLast,
+        startAt: this._startAt,
+        endAt: this._endAt,
+        equalTo: this._equalTo,
+        path: this._path
+      },
+      null,
+      2
+    );
   }
 
   private validateNoKey(caller: string, key: string) {
