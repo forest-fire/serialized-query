@@ -104,7 +104,9 @@ export class SerializedQuery<T = any> {
     if (!db) {
       db = this.db;
     }
-    let q = db.ref(typeof this._path === "function" ? slashNotation(this._path()) : this._path);
+    let q = db.ref(
+      typeof this._path === "function" ? slashNotation(this._path()) : this._path
+    );
     switch (this._orderBy) {
       case "orderByKey":
         q = q.orderByKey();
@@ -128,9 +130,7 @@ export class SerializedQuery<T = any> {
     if (this._endAt) {
       q = q.endAt(this._endAt);
     }
-    if (this._startAt) {
-      q = q.startAt(this._startAt);
-    }
+
     if (this._equalTo) {
       q = q.equalTo(this._equalTo);
     }
@@ -199,7 +199,9 @@ export class SerializedQuery<T = any> {
   private validateNoKey(caller: string, key: string) {
     if (key && this._orderBy === "orderByKey") {
       throw new Error(
-        `You can not use the "key" parameter with ${caller}() when using the ${this._orderBy} sort.`
+        `You can not use the "key" parameter with ${caller}() when using the ${
+          this._orderBy
+        } sort.`
       );
     }
   }
