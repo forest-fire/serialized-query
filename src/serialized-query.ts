@@ -1,5 +1,4 @@
 import { rtdb } from "firebase-api-surface";
-import Crypto from "cryptojslib";
 export interface ISimplifiedDBAdaptor {
   ref: (path: string) => any;
 }
