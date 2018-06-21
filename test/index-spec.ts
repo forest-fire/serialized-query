@@ -2,7 +2,7 @@
 import { SerializedQuery } from "../src/serialized-query";
 import * as chai from "chai";
 import DB from "abstracted-admin";
-import { Record, Model, List } from "firemodel";
+import { Model, List } from "firemodel";
 import { Person } from "./testing/Person";
 import * as helpers from "./testing/helpers";
 helpers.setupEnv();
@@ -80,4 +80,20 @@ describe("Serialized Query: ", () => {
       age = i.age;
     });
   });
+
+  it('same query structure gives same hashCode', async () => {
+    const foo = new SerializedQuery('/foo/bar').orderByChild('goober');
+    const bar = new SerializedQuery('/foo/bar').orderByChild('goober');
+    expect(foo.hashCode()).to.equal(bar.hashCode());
+    const foo2 = new SerializedQuery('/foo/bar2').orderByChild('goober').limitToFirst(5);
+    const bar2 = new SerializedQuery('/foo/bar2').orderByChild('goober').limitToFirst(5);
+    expect(foo2.hashCode()).to.equal(bar2.hashCode());
+  });
+
+  it('different query structure gives different hashCode', async () => {
+    const foo2 = new SerializedQuery('/foo/bar').orderByChild('goober').limitToFirst(5);
+    const bar2 = new SerializedQuery('/foo/bar').orderByChild('goober');
+    expect(foo2.hashCode()).to.not.equal(bar2.hashCode());
+  });
+
 });
