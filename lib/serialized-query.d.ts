@@ -20,7 +20,7 @@ export declare class SerializedQuery<T = any> {
     protected _handleSnapshot: (snap: rtdb.IDataSnapshot) => any;
     constructor(path?: string | LazyPath);
     readonly path: string | LazyPath;
-    setPath(p: string | LazyPath): this;
+    setPath(path: string | LazyPath): this;
     limitToFirst(num: number): this;
     limitToLast(num: number): this;
     orderByChild(child: keyof T): this;
