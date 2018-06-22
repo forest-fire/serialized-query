@@ -70,7 +70,7 @@ describe("Serialized Query: ", () => {
     mockDb.mock.updateDB(peopleDataset());
     await helpers.wait(50);
     const query = new SerializedQuery().orderByChild("age").limitToLast(2);
-    const list = await List.from(Person, query);
+    const list = await List.fromQuery(Person, query);
 
     expect(list.data).to.have.lengthOf(2);
 
