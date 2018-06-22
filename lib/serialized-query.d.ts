@@ -25,6 +25,11 @@ export declare class SerializedQuery<T = any> {
     constructor(path?: string | LazyPath);
     readonly path: string | LazyPath;
     setPath(path: string | LazyPath): this;
+    /**
+     * hashCode
+     *
+     * get a unique numeric hashcode for this query
+     */
     hashCode(): number;
     limitToFirst(num: number): this;
     limitToLast(num: number): this;

@@ -49,6 +49,11 @@ export class SerializedQuery<T = any> {
     return this;
   }
 
+  /**
+   * hashCode
+   *
+   * get a unique numeric hashcode for this query
+   */
   public hashCode() {
     const identity = this.toJSON();
     let hash = 0;
