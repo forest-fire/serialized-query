@@ -25,6 +25,7 @@ export declare class SerializedQuery<T = any> {
     constructor(path?: string | LazyPath);
     readonly path: string | LazyPath;
     setPath(path: string | LazyPath): this;
+    hashCode(): number;
     limitToFirst(num: number): this;
     limitToLast(num: number): this;
     orderByChild(child: keyof T): this;
@@ -44,7 +45,6 @@ export declare class SerializedQuery<T = any> {
     /** allows a shorthand notation for simple serialized queries */
     where<V>(operation: IComparisonOperator, value: V): this;
     toJSON(): string;
-    hashCode(): number;
     toString(): string;
     private validateNoKey;
 }
