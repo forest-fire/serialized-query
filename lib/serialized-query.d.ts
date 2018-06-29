@@ -25,6 +25,12 @@ export declare class SerializedQuery<T = any> {
     constructor(path?: string | LazyPath);
     readonly path: string | LazyPath;
     setPath(path: string | LazyPath): this;
+    /**
+     * hashCode
+     *
+     * get a unique numeric hashcode for this query
+     */
+    hashCode(): number;
     limitToFirst(num: number): this;
     limitToLast(num: number): this;
     orderByChild(child: keyof T): this;
@@ -33,9 +39,14 @@ export declare class SerializedQuery<T = any> {
     startAt(value: any, key?: string): this;
     endAt(value: any, key?: string): this;
     equalTo(value: any, key?: string): this;
-    /** Allows the DB interface to be setup early, allowing clients to call execute without any params */
+    /**
+     * Allows the DB interface to be setup early, allowing clients
+     * to call execute without any params
+     */
     setDB(db: ISimplifiedDBAdaptor): this;
-    /** generate a Firebase query from serialized state */
+    /**
+     * generate a Firebase query from serialized state
+     */
     deserialize(db?: ISimplifiedDBAdaptor): any;
     /** allows you to add a handler/transformer for snapshots with the results of the execute() method */
     handleSnapshot(fn: (snap: rtdb.IDataSnapshot) => any): this;
@@ -44,7 +55,6 @@ export declare class SerializedQuery<T = any> {
     /** allows a shorthand notation for simple serialized queries */
     where<V>(operation: IComparisonOperator, value: V): this;
     toJSON(): string;
-    hashCode(): number;
     toString(): string;
     private validateNoKey;
 }

@@ -1,8 +1,8 @@
 // tslint:disable:no-implicit-dependencies
 import { SerializedQuery } from "../src/serialized-query";
 import * as chai from "chai";
-import DB from "abstracted-admin";
-import { Model, List } from "firemodel";
+import { DB, RealTimeDB } from "abstracted-admin";
+import { Model, List, FireModel } from "firemodel";
 import { Person } from "./testing/Person";
 import * as helpers from "./testing/helpers";
 helpers.setupEnv();
@@ -44,11 +44,14 @@ const peopleDataset = () => ({
   }
 });
 helpers.setupEnv();
-const mockDb = new DB({ mocking: true });
-// const db = new DB();
 const expect = chai.expect;
 
 describe("Serialized Query: ", () => {
+  let mockDb: RealTimeDB;
+  before(async () => {
+    mockDb = await DB.connect({ mocking: true });
+    FireModel.defaultDb = mockDb;
+  });
   it("instantiates", () => {
     const q = new SerializedQuery("foo");
     expect(q).to.be.an.instanceOf(SerializedQuery);
@@ -66,11 +69,10 @@ describe("Serialized Query: ", () => {
   });
 
   it("orderByChild() allows server side to filter appropriate records", async () => {
-    Model.defaultDb = mockDb;
     mockDb.mock.updateDB(peopleDataset());
     await helpers.wait(50);
     const query = new SerializedQuery().orderByChild("age").limitToLast(2);
-    const list = await List.from(Person, query);
+    const list = await List.fromQuery(Person, query);
 
     expect(list.data).to.have.lengthOf(2);
 
@@ -81,19 +83,18 @@ describe("Serialized Query: ", () => {
     });
   });
 
-  it('same query structure gives same hashCode', async () => {
-    const foo = new SerializedQuery('/foo/bar').orderByChild('goober');
-    const bar = new SerializedQuery('/foo/bar').orderByChild('goober');
+  it("same query structure gives same hashCode", async () => {
+    const foo = new SerializedQuery("/foo/bar").orderByChild("goober");
+    const bar = new SerializedQuery("/foo/bar").orderByChild("goober");
     expect(foo.hashCode()).to.equal(bar.hashCode());
-    const foo2 = new SerializedQuery('/foo/bar2').orderByChild('goober').limitToFirst(5);
-    const bar2 = new SerializedQuery('/foo/bar2').orderByChild('goober').limitToFirst(5);
+    const foo2 = new SerializedQuery("/foo/bar2").orderByChild("goober").limitToFirst(5);
+    const bar2 = new SerializedQuery("/foo/bar2").orderByChild("goober").limitToFirst(5);
     expect(foo2.hashCode()).to.equal(bar2.hashCode());
   });
 
-  it('different query structure gives different hashCode', async () => {
-    const foo2 = new SerializedQuery('/foo/bar').orderByChild('goober').limitToFirst(5);
-    const bar2 = new SerializedQuery('/foo/bar').orderByChild('goober');
+  it("different query structure gives different hashCode", async () => {
+    const foo2 = new SerializedQuery("/foo/bar").orderByChild("goober").limitToFirst(5);
+    const bar2 = new SerializedQuery("/foo/bar").orderByChild("goober");
     expect(foo2.hashCode()).to.not.equal(bar2.hashCode());
   });
-
 });
