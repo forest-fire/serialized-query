@@ -24,11 +24,8 @@ export class SerializedQuery<T = any> {
   protected _path: string | LazyPath;
   protected _limitToFirst: number;
   protected _limitToLast: number;
-  protected _orderBy:
-    | "orderByChild"
-    | "orderByKey"
-    | "orderByValue"
-    | "orderByValue" = "orderByKey";
+  protected _orderBy: "orderByChild" | "orderByKey" | "orderByValue" | "orderByValue" =
+    "orderByKey";
   protected _orderKey: keyof T;
   protected _startAt: string;
   protected _endAt: string;
@@ -58,13 +55,13 @@ export class SerializedQuery<T = any> {
     const identity = this.toJSON();
     let hash = 0;
     if (identity.length === 0) {
-        return hash;
+      return hash;
     }
     for (let i = 0; i < identity.length; i++) {
-        const char = identity.charCodeAt(i);
-        // tslint:disable:no-bitwise
-        hash = ((hash<<5)-hash)+char;
-        hash = hash & hash; // Convert to 32bit integer
+      const char = identity.charCodeAt(i);
+      // tslint:disable:no-bitwise
+      hash = (hash << 5) - hash + char;
+      hash = hash & hash; // Convert to 32bit integer
     }
     return hash;
   }
@@ -113,13 +110,18 @@ export class SerializedQuery<T = any> {
     return this;
   }
 
-  /** Allows the DB interface to be setup early, allowing clients to call execute without any params */
+  /**
+   * Allows the DB interface to be setup early, allowing clients
+   * to call execute without any params
+   */
   public setDB(db: ISimplifiedDBAdaptor) {
     this.db = db;
     return this;
   }
 
-  /** generate a Firebase query from serialized state */
+  /**
+   * generate a Firebase query from serialized state
+   */
   public deserialize(db?: ISimplifiedDBAdaptor) {
     if (!db) {
       db = this.db;

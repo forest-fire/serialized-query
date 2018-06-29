@@ -1,22 +1,10 @@
 // tslint:disable:no-implicit-dependencies
-import {
-  Model,
-  BaseSchema,
-  property,
-  constrainedProperty,
-  constrain,
-  desc,
-  min,
-  max,
-  length,
-  schema
-} from "firemodel";
+import { Model, property, length, model } from "firemodel";
 
-@schema({ dbOffset: "authenticated", audit: true })
-export class Company extends BaseSchema {
-  @property
-  @length(20)
-  public name: string;
+@model({ dbOffset: "authenticated", audit: true })
+export class Company extends Model {
+  // prettier-ignore
+  @property @length(20) public name: string;
   @property public employees?: number;
   @property public founded?: string;
 }
