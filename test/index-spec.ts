@@ -2,7 +2,7 @@
 import { SerializedQuery } from "../src/serialized-query";
 import * as chai from "chai";
 import { DB, RealTimeDB } from "abstracted-admin";
-import { Model, List, FireModel } from "firemodel";
+import { List, FireModel } from "firemodel";
 import { Person } from "./testing/Person";
 import * as helpers from "./testing/helpers";
 helpers.setupEnv();
@@ -96,5 +96,14 @@ describe("Serialized Query: ", () => {
     const foo2 = new SerializedQuery("/foo/bar").orderByChild("goober").limitToFirst(5);
     const bar2 = new SerializedQuery("/foo/bar").orderByChild("goober");
     expect(foo2.hashCode()).to.not.equal(bar2.hashCode());
+  });
+
+  it("identity property provides appropriate details", () => {
+    const foo = new SerializedQuery("/foo/bar").orderByChild("goober");
+    expect(foo.identity).to.be.an("object");
+    expect(foo.identity.orderBy).to.equal("orderByChild");
+    expect(foo.identity.orderByKey).to.equal("goober");
+    expect(foo.identity.limitToFirst).to.equal(undefined);
+    expect(foo.identity.startAt).to.equal(undefined);
   });
 });

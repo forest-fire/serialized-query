@@ -4,6 +4,16 @@ export interface ISimplifiedDBAdaptor {
 }
 export declare type LazyPath = () => string;
 export declare function slashNotation(path: string): string;
+export interface ISerializedQueryIdentity {
+    orderBy: string;
+    orderByKey: string;
+    limitToFirst: number;
+    limitToLast: number;
+    startAt: string;
+    endAt: string;
+    equalTo: string;
+    path: string;
+}
 export declare type IComparisonOperator = "=" | ">" | "<";
 export declare type IConditionAndValue = [IComparisonOperator, boolean | string | number];
 /**

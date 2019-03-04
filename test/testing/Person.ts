@@ -24,10 +24,11 @@ export class Person extends Model {
   @property @pushKey public tags?: IDictionary<string>;
 
   // prettier-ignore
-  @ownedBy(Person) @inverse("children") public motherId?: fk;
+  @ownedBy(() => Person, "children") public motherId?: fk;
   // prettier-ignore
-  @ownedBy(Person) @inverse("children") public fatherId?: fk;
-  @hasMany(Person) public children?: IDictionary;
-
-  @ownedBy(Company) public employerId?: fk;
+  @ownedBy(() => Person, "children") public fatherId?: fk;
+  // prettier-ignore
+  @hasMany(() => Person) public children?: IDictionary;
+  // prettier-ignore
+  @ownedBy(() => Company) public employerId?: fk;
 }

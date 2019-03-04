@@ -9,6 +9,17 @@ export function slashNotation(path: string) {
   return path.replace(/\./g, "/");
 }
 
+export interface ISerializedQueryIdentity {
+  orderBy: string;
+  orderByKey: string;
+  limitToFirst: number;
+  limitToLast: number;
+  startAt: string;
+  endAt: string;
+  equalTo: string;
+  path: string;
+}
+
 export type IComparisonOperator = "=" | ">" | "<";
 export type IConditionAndValue = [IComparisonOperator, boolean | string | number];
 
