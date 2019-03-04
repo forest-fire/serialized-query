@@ -52,7 +52,7 @@ export class SerializedQuery<T = any> {
    * get a unique numeric hashcode for this query
    */
   public hashCode() {
-    const identity = this.toJSON();
+    const identity = JSON.stringify(this.identity);
     let hash = 0;
     if (identity.length === 0) {
       return hash;
@@ -188,8 +188,8 @@ export class SerializedQuery<T = any> {
     }
   }
 
-  public toJSON() {
-    return JSON.stringify({
+  public get identity() {
+    return {
       orderBy: this._orderBy,
       orderByKey: this._orderKey,
       limitToFirst: this._limitToFirst,
@@ -198,24 +198,15 @@ export class SerializedQuery<T = any> {
       endAt: this._endAt,
       equalTo: this._equalTo,
       path: this._path
-    });
+    };
+  }
+
+  public toJSON() {
+    return this.identity;
   }
 
   public toString() {
-    return JSON.stringify(
-      {
-        orderBy: this._orderBy,
-        orderByKey: this._orderKey,
-        limitToFirst: this._limitToFirst,
-        limitToLast: this._limitToLast,
-        startAt: this._startAt,
-        endAt: this._endAt,
-        equalTo: this._equalTo,
-        path: this._path
-      },
-      null,
-      2
-    );
+    return JSON.stringify(this.identity, null, 2);
   }
 
   private validateNoKey(caller: string, key: string) {
