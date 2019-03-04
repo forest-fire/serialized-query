@@ -54,7 +54,26 @@ export declare class SerializedQuery<T = any> {
     execute(): Promise<any>;
     /** allows a shorthand notation for simple serialized queries */
     where<V>(operation: IComparisonOperator, value: V): this;
-    toJSON(): string;
+    readonly identity: {
+        orderBy: "orderByChild" | "orderByKey" | "orderByValue";
+        orderByKey: keyof T;
+        limitToFirst: number;
+        limitToLast: number;
+        startAt: string;
+        endAt: string;
+        equalTo: string;
+        path: string | LazyPath;
+    };
+    toJSON(): {
+        orderBy: "orderByChild" | "orderByKey" | "orderByValue";
+        orderByKey: keyof T;
+        limitToFirst: number;
+        limitToLast: number;
+        startAt: string;
+        endAt: string;
+        equalTo: string;
+        path: string | LazyPath;
+    };
     toString(): string;
     private validateNoKey;
 }
