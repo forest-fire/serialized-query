@@ -4,16 +4,17 @@ export interface ISimplifiedDBAdaptor {
 }
 export declare type LazyPath = () => string;
 export declare function slashNotation(path: string): string;
-export interface ISerializedQueryIdentity {
-    orderBy: string;
-    orderByKey: string;
-    limitToFirst: number;
-    limitToLast: number;
-    startAt: string;
-    endAt: string;
-    equalTo: string;
+export interface ISerializedQueryIdentity<T = any> {
+    orderBy: IOrderByType;
+    orderByKey?: keyof T;
+    limitToFirst?: number;
+    limitToLast?: number;
+    startAt?: string;
+    endAt?: string;
+    equalTo?: string;
     path: string;
 }
+export declare type IOrderByType = "orderByChild" | "orderByKey" | "orderByValue" | "orderByValue";
 export declare type IComparisonOperator = "=" | ">" | "<";
 export declare type IConditionAndValue = [IComparisonOperator, boolean | string | number];
 /**
@@ -26,7 +27,7 @@ export declare class SerializedQuery<T = any> {
     protected _path: string | LazyPath;
     protected _limitToFirst: number;
     protected _limitToLast: number;
-    protected _orderBy: "orderByChild" | "orderByKey" | "orderByValue" | "orderByValue";
+    protected _orderBy: IOrderByType;
     protected _orderKey: keyof T;
     protected _startAt: string;
     protected _endAt: string;
@@ -64,26 +65,8 @@ export declare class SerializedQuery<T = any> {
     execute(): Promise<any>;
     /** allows a shorthand notation for simple serialized queries */
     where<V>(operation: IComparisonOperator, value: V): this;
-    readonly identity: {
-        orderBy: "orderByChild" | "orderByKey" | "orderByValue";
-        orderByKey: keyof T;
-        limitToFirst: number;
-        limitToLast: number;
-        startAt: string;
-        endAt: string;
-        equalTo: string;
-        path: string | LazyPath;
-    };
-    toJSON(): {
-        orderBy: "orderByChild" | "orderByKey" | "orderByValue";
-        orderByKey: keyof T;
-        limitToFirst: number;
-        limitToLast: number;
-        startAt: string;
-        endAt: string;
-        equalTo: string;
-        path: string | LazyPath;
-    };
+    readonly identity: ISerializedQueryIdentity<T>;
+    toJSON(): ISerializedQueryIdentity<T>;
     toString(): string;
     private validateNoKey;
 }

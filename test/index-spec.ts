@@ -71,7 +71,7 @@ describe("Serialized Query: ", () => {
   it("orderByChild() allows server side to filter appropriate records", async () => {
     mockDb.mock.updateDB(peopleDataset());
     await helpers.wait(50);
-    const query = new SerializedQuery().orderByChild("age").limitToLast(2);
+    const query = new SerializedQuery<Person>().orderByChild("age").limitToLast(2);
     const list = await List.fromQuery(Person, query);
 
     expect(list.data).to.have.lengthOf(2);
