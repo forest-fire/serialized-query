@@ -14,12 +14,13 @@
     "README.md",
     "package.json"
   ],
-  "main": "lib/serialized-query.js",
-  "typings": "lib/serialized-query.d.ts",
+  "module": "lib/es/serialized-query.js",
+  "main": "lib/cjs/serialized-query.js",
+  "typings": "lib/cjs/serialized-query.d.ts",
   "scripts": {
     "clean": "rimraf lib",
     "lint": "tslint --force --format verbose \"src/**/*.ts\"",
-    "build": "ts-node ./scripts/build.ts",
+    "build": "rm -rf lib && tsc -P tsconfig.esnext.json && tsc -P tsconfig.json",
     "deploy": "ts-node ./scripts/deploy.ts",
     "test": "ts-node ./scripts/test.ts ",
     "coverage": "nyc --reporter=text --reporter=html mocha --compilers ts:ts-node/register",
