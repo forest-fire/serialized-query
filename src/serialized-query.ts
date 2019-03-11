@@ -9,6 +9,23 @@ export function slashNotation(path: string) {
   return path.replace(/\./g, "/");
 }
 
+export interface ISerializedQueryIdentity<T = any> {
+  orderBy: IOrderByType;
+  orderByKey?: keyof T;
+  limitToFirst?: number;
+  limitToLast?: number;
+  startAt?: string;
+  endAt?: string;
+  equalTo?: string;
+  path: string;
+}
+
+export type IOrderByType =
+  | "orderByChild"
+  | "orderByKey"
+  | "orderByValue"
+  | "orderByValue";
+
 export type IComparisonOperator = "=" | ">" | "<";
 export type IConditionAndValue = [IComparisonOperator, boolean | string | number];
 
@@ -24,8 +41,7 @@ export class SerializedQuery<T = any> {
   protected _path: string | LazyPath;
   protected _limitToFirst: number;
   protected _limitToLast: number;
-  protected _orderBy: "orderByChild" | "orderByKey" | "orderByValue" | "orderByValue" =
-    "orderByKey";
+  protected _orderBy: IOrderByType = "orderByKey";
   protected _orderKey: keyof T;
   protected _startAt: string;
   protected _endAt: string;
@@ -188,7 +204,7 @@ export class SerializedQuery<T = any> {
     }
   }
 
-  public get identity() {
+  public get identity(): ISerializedQueryIdentity<T> {
     return {
       orderBy: this._orderBy,
       orderByKey: this._orderKey,
@@ -197,7 +213,7 @@ export class SerializedQuery<T = any> {
       startAt: this._startAt,
       endAt: this._endAt,
       equalTo: this._equalTo,
-      path: this._path
+      path: typeof this._path === "function" ? (this._path() as string) : this._path
     };
   }
 
