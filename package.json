@@ -1,6 +1,6 @@
 {
   "name": "serialized-query",
-  "version": "0.4.9",
+  "version": "0.4.10",
   "description": "A simple Typescript class to serialize Firebase queries",
   "license": "MIT",
   "repository": "https://github.com/forest-fire/serialized-query.git",
