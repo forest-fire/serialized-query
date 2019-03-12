@@ -1,7 +1,9 @@
-import { rtdb } from "firebase-api-surface";
+// tslint:disable:no-implicit-dependencies
 export interface ISimplifiedDBAdaptor {
   ref: (path: string) => any;
 }
+
+export type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 
 export type LazyPath = () => string;
 
@@ -47,7 +49,7 @@ export class SerializedQuery<T = any> {
   protected _endAt: string;
   protected _equalTo: string;
 
-  protected _handleSnapshot: (snap: rtdb.IDataSnapshot) => any;
+  protected _handleSnapshot: (snap: DataSnapshot) => any;
 
   constructor(path: string | LazyPath = "/") {
     this._path = typeof path === "string" ? slashNotation(path) : path;
@@ -177,7 +179,7 @@ export class SerializedQuery<T = any> {
   }
 
   /** allows you to add a handler/transformer for snapshots with the results of the execute() method */
-  public handleSnapshot(fn: (snap: rtdb.IDataSnapshot) => any) {
+  public handleSnapshot(fn: (snap: DataSnapshot) => any) {
     this._handleSnapshot = fn;
     return this;
   }

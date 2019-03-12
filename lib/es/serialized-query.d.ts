@@ -1,7 +1,7 @@
-import { rtdb } from "firebase-api-surface";
 export interface ISimplifiedDBAdaptor {
     ref: (path: string) => any;
 }
+export declare type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export declare type LazyPath = () => string;
 export declare function slashNotation(path: string): string;
 export interface ISerializedQueryIdentity<T = any> {
@@ -32,7 +32,7 @@ export declare class SerializedQuery<T = any> {
     protected _startAt: string;
     protected _endAt: string;
     protected _equalTo: string;
-    protected _handleSnapshot: (snap: rtdb.IDataSnapshot) => any;
+    protected _handleSnapshot: (snap: DataSnapshot) => any;
     constructor(path?: string | LazyPath);
     readonly path: string | LazyPath;
     setPath(path: string | LazyPath): this;
@@ -60,7 +60,7 @@ export declare class SerializedQuery<T = any> {
      */
     deserialize(db?: ISimplifiedDBAdaptor): any;
     /** allows you to add a handler/transformer for snapshots with the results of the execute() method */
-    handleSnapshot(fn: (snap: rtdb.IDataSnapshot) => any): this;
+    handleSnapshot(fn: (snap: DataSnapshot) => any): this;
     /** execute the query as a one time fetch */
     execute(): Promise<any>;
     /** allows a shorthand notation for simple serialized queries */
