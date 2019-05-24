@@ -389,18 +389,6 @@ abstracted-admin@^0.26.3:
     serialized-query "^0.6.0"
     typed-conversions "^0.10.1"
 
-abstracted-firebase@^0.25.8:
-  version "0.25.8"
-  resolved "https://registry.yarnpkg.com/abstracted-firebase/-/abstracted-firebase-0.25.8.tgz#474df957b8779b18b7ecfa232a59c0750106ab18"
-  integrity sha512-wk6CHJLjkWmTxEm9buvhghx87FaOwf1MeB5PII6mMXG96cssojot/4RePBGOQd5w0uGFI6cMIhSQC7VNINsIUA==
-  dependencies:
-    "@firebase/auth-types" "^0.7.0"
-    "@firebase/database-types" "^0.4.0"
-    common-types "^1.10.20"
-    firemock "^0.25.1"
-    serialized-query "^0.6.0"
-    typed-conversions "^0.10.1"
-
 abstracted-firebase@^0.26.2:
   version "0.26.2"
   resolved "https://registry.yarnpkg.com/abstracted-firebase/-/abstracted-firebase-0.26.2.tgz#6523ac280e1285a0e9702c069b700ca5fa5a4f73"
@@ -963,13 +951,13 @@ firemock@^0.25.1, firemock@^0.25.5:
     lodash.set "^4.3.2"
     typed-conversions "^0.10.1"
 
-firemodel@^0.25.2:
-  version "0.25.2"
-  resolved "https://registry.yarnpkg.com/firemodel/-/firemodel-0.25.2.tgz#2e67965d3001f78e565b1a468c0a7b469245fb16"
-  integrity sha512-fn5nvBq4AyFVbYwH9WlARW7xh7HQfAB1tXt7lWXN0F11nyLhN7rtaxHmyEYNxbnbiuV+zdGwTikIgs6sSlytVQ==
+firemodel@^0.26.1:
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/firemodel/-/firemodel-0.26.1.tgz#c6ee538922d2401e7fef3f4edbb989a002775d17"
+  integrity sha512-/u3aoKUSLf9IXoMAlB4i+WaNmG5MUPF78E83R3KfZqHOIdQ7r8Yv7t6jYXdJGJ2ekJzx6v87QUIECVBwPOQ/4A==
   dependencies:
-    abstracted-firebase "^0.25.8"
-    common-types "^1.10.20"
+    abstracted-firebase "^0.26.2"
+    common-types "^1.10.26"
     fast-deep-equal "^2.0.1"
     firebase-key "^2.0.2"
     get-value "^3.0.1"
@@ -1958,7 +1946,17 @@ process-nextick-args@~2.0.0:
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.0.tgz#a37d732f4271b4ab1ad070d35508e8290788ffaa"
   integrity sha512-MtEC1TqN0EU5nephaJ4rAtThHtC86dNN9qCuEhtshvpVBkAW5ZO7BASN9REnF9eoXGcRub+pFuKEpOHE+HbEMw==
 
-protobufjs@6.8.8, protobufjs@^6.8.0, protobufjs@^6.8.6, protobufjs@^6.8.8:
+protobufjs@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-5.0.3.tgz#e4dfe9fb67c90b2630d15868249bcc4961467a17"
+  integrity sha512-55Kcx1MhPZX0zTbVosMQEO5R6/rikNXd9b6RQK4KSPcrSIIwoXTtebIczUrXlwaSrbz4x8XUVThGPob1n8I4QA==
+  dependencies:
+    ascli "~1"
+    bytebuffer "~5"
+    glob "^7.0.5"
+    yargs "^3.10.0"
+
+protobufjs@^6.8.0, protobufjs@^6.8.6, protobufjs@^6.8.8:
   version "6.8.8"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.8.8.tgz#c8b4f1282fd7a90e6f5b109ed11c84af82908e7c"
   integrity sha512-AAmHtD5pXgZfi7GMpllpO3q1Xw1OYldr+dMUlAnffGTAhqkg72WdmSY71uKBF/JuyiKs8psYbtKrhi0ASCD8qw==
@@ -1976,16 +1974,6 @@ protobufjs@6.8.8, protobufjs@^6.8.0, protobufjs@^6.8.6, protobufjs@^6.8.8:
     "@types/long" "^4.0.0"
     "@types/node" "^10.1.0"
     long "^4.0.0"
-
-protobufjs@^5.0.3:
-  version "5.0.3"
-  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-5.0.3.tgz#e4dfe9fb67c90b2630d15868249bcc4961467a17"
-  integrity sha512-55Kcx1MhPZX0zTbVosMQEO5R6/rikNXd9b6RQK4KSPcrSIIwoXTtebIczUrXlwaSrbz4x8XUVThGPob1n8I4QA==
-  dependencies:
-    ascli "~1"
-    bytebuffer "~5"
-    glob "^7.0.5"
-    yargs "^3.10.0"
 
 pump@^2.0.0:
   version "2.0.1"
