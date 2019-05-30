@@ -5,8 +5,6 @@ export interface ISimplifiedDBAdaptor {
 
 export type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 
-export type LazyPath = () => string;
-
 export function slashNotation(path: string) {
   return path.replace(/\./g, "/");
 }
@@ -36,11 +34,11 @@ export type IConditionAndValue = [IComparisonOperator, boolean | string | number
  * Firebase query
  */
 export class SerializedQuery<T = any> {
-  public static path<T = any>(path: string | LazyPath = "/") {
+  public static path<T = any>(path: string = "/") {
     return new SerializedQuery<T>(path);
   }
   public db: ISimplifiedDBAdaptor;
-  protected _path: string | LazyPath;
+  protected _path: string;
   protected _limitToFirst: number;
   protected _limitToLast: number;
   protected _orderBy: IOrderByType = "orderByKey";
@@ -51,7 +49,7 @@ export class SerializedQuery<T = any> {
 
   protected _handleSnapshot: (snap: DataSnapshot) => any;
 
-  constructor(path: string | LazyPath = "/") {
+  constructor(path: string = "/") {
     this._path = typeof path === "string" ? slashNotation(path) : path;
   }
 
@@ -59,7 +57,7 @@ export class SerializedQuery<T = any> {
     return this._path;
   }
 
-  public setPath(path: string | LazyPath) {
+  public setPath(path: string) {
     this._path = typeof path === "string" ? slashNotation(path) : path;
     return this;
   }
@@ -144,9 +142,7 @@ export class SerializedQuery<T = any> {
     if (!db) {
       db = this.db;
     }
-    let q = db.ref(
-      typeof this._path === "function" ? slashNotation(this._path()) : this._path
-    );
+    let q = db.ref(this._path);
     switch (this._orderBy) {
       case "orderByKey":
         q = q.orderByKey();
@@ -215,7 +211,7 @@ export class SerializedQuery<T = any> {
       startAt: this._startAt,
       endAt: this._endAt,
       equalTo: this._equalTo,
-      path: typeof this._path === "function" ? (this._path() as string) : this._path
+      path: this._path
     };
   }
 

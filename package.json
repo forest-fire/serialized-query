@@ -20,15 +20,8 @@
   "scripts": {
     "clean": "rimraf lib",
     "clean:nuclear": "rimraf lib dist node_modeles && yarn cache clean && rm yarn.lock && yarn && yarn upgrade",
-    "lint": "tslint --force --format verbose \"src/**/*.ts\"",
     "build": "rm -rf lib && tsc -P tsconfig.esnext.json && tsc -P tsconfig.json",
-    "deploy": "ts-node ./scripts/deploy.ts",
-    "test": "ts-node ./scripts/test.ts ",
-    "coverage": "nyc --reporter=text --reporter=html mocha --compilers ts:ts-node/register",
-    "watch": "ts-node ./scripts/watch.ts",
-    "watch:test": "ts-node ./scripts/watch.ts test",
-    "watch:all": "ts-node ./scripts/watch.ts all",
-    "cli": "ts-node cli/index.ts --"
+    "test": "ts-node ./scripts/test.ts "
   },
   "dependencies": {
     "common-types": "^1.11.10"
@@ -42,11 +35,11 @@
     "@types/rimraf": "^2.0.2",
     "@types/shelljs": "^0.8.5",
     "@types/stack-trace": "^0.0.29",
-    "abstracted-admin": "^0.26.3",
+    "abstracted-admin": "^0.27.2",
     "chai": "^4.2.0",
     "chalk": "^2.4.2",
     "firemock": "^0.27.2",
-    "firemodel": "^0.26.1",
+    "firemodel": "^0.27.0",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.11",
     "mocha": "^6.1.4",

@@ -2,7 +2,6 @@ export interface ISimplifiedDBAdaptor {
     ref: (path: string) => any;
 }
 export declare type DataSnapshot = import("@firebase/database-types").DataSnapshot;
-export declare type LazyPath = () => string;
 export declare function slashNotation(path: string): string;
 export interface ISerializedQueryIdentity<T = any> {
     orderBy: IOrderByType;
@@ -22,9 +21,9 @@ export declare type IConditionAndValue = [IComparisonOperator, boolean | string 
  * Firebase query
  */
 export declare class SerializedQuery<T = any> {
-    static path<T = any>(path?: string | LazyPath): SerializedQuery<T>;
+    static path<T = any>(path?: string): SerializedQuery<T>;
     db: ISimplifiedDBAdaptor;
-    protected _path: string | LazyPath;
+    protected _path: string;
     protected _limitToFirst: number;
     protected _limitToLast: number;
     protected _orderBy: IOrderByType;
@@ -33,9 +32,9 @@ export declare class SerializedQuery<T = any> {
     protected _endAt: string;
     protected _equalTo: string;
     protected _handleSnapshot: (snap: DataSnapshot) => any;
-    constructor(path?: string | LazyPath);
-    readonly path: string | LazyPath;
-    setPath(path: string | LazyPath): this;
+    constructor(path?: string);
+    readonly path: string;
+    setPath(path: string): this;
     /**
      * hashCode
      *
