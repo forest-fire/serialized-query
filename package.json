@@ -24,22 +24,22 @@
     "test": "ts-node ./scripts/test.ts "
   },
   "dependencies": {
-    "common-types": "^1.11.10"
+    "common-types": "^1.11.14"
   },
   "devDependencies": {
-    "@firebase/database-types": "^0.4.0",
-    "@types/chai": "^4.1.2",
+    "@firebase/database-types": "^0.4.2",
+    "@types/chai": "^4.1.7",
     "@types/chalk": "^2.2.0",
     "@types/mocha": "^2.2.41",
     "@types/node": "^6.0.0",
     "@types/rimraf": "^2.0.2",
     "@types/shelljs": "^0.8.5",
     "@types/stack-trace": "^0.0.29",
-    "abstracted-admin": "^0.27.2",
+    "abstracted-admin": "^0.27.7",
     "chai": "^4.2.0",
     "chalk": "^2.4.2",
-    "firemock": "^0.27.2",
-    "firemodel": "^0.27.0",
+    "firemock": "^0.27.8",
+    "firemodel": "^0.29.14",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.11",
     "mocha": "^6.1.4",
@@ -47,10 +47,10 @@
     "rimraf": "^2.6.3",
     "shelljs": "^0.8.3",
     "test-console": "^1.1.0",
-    "ts-node": "^8.2.0",
-    "tslint": "^5.16.0",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.5.1"
+    "typescript": "^3.5.3"
   },
   "engines": {
     "node": ">=6.0.0"

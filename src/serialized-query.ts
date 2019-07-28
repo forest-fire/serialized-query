@@ -1,9 +1,7 @@
-// tslint:disable:no-implicit-dependencies
+export type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export interface ISimplifiedDBAdaptor {
   ref: (path: string) => any;
 }
-
-export type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 
 export function slashNotation(path: string) {
   return path.replace(/\./g, "/");
@@ -27,7 +25,10 @@ export type IOrderByType =
   | "orderByValue";
 
 export type IComparisonOperator = "=" | ">" | "<";
-export type IConditionAndValue = [IComparisonOperator, boolean | string | number];
+export type IConditionAndValue = [
+  IComparisonOperator,
+  boolean | string | number
+];
 
 /**
  * Provides a way to serialize the full characteristics of a
@@ -46,7 +47,6 @@ export class SerializedQuery<T = any> {
   protected _startAt: string;
   protected _endAt: string;
   protected _equalTo: string;
-
   protected _handleSnapshot: (snap: DataSnapshot) => any;
 
   constructor(path: string = "/") {

@@ -1,7 +1,7 @@
+export declare type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export interface ISimplifiedDBAdaptor {
     ref: (path: string) => any;
 }
-export declare type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export declare function slashNotation(path: string): string;
 export interface ISerializedQueryIdentity<T = any> {
     orderBy: IOrderByType;
