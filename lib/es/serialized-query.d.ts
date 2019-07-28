@@ -1,9 +1,10 @@
+import { IDictionary } from "common-types";
+export declare type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export interface ISimplifiedDBAdaptor {
     ref: (path: string) => any;
 }
-export declare type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export declare function slashNotation(path: string): string;
-export interface ISerializedQueryIdentity<T = any> {
+export interface ISerializedQueryIdentity<T = IDictionary> {
     orderBy: IOrderByType;
     orderByKey?: keyof T;
     limitToFirst?: number;
@@ -20,8 +21,8 @@ export declare type IConditionAndValue = [IComparisonOperator, boolean | string 
  * Provides a way to serialize the full characteristics of a
  * Firebase query
  */
-export declare class SerializedQuery<T = any> {
-    static path<T = any>(path?: string): SerializedQuery<T>;
+export declare class SerializedQuery<T extends object = IDictionary> {
+    static path<T extends object = IDictionary>(path?: string): SerializedQuery<T>;
     db: ISimplifiedDBAdaptor;
     protected _path: string;
     protected _limitToFirst: number;
