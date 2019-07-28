@@ -1,3 +1,4 @@
+import { IDictionary } from "common-types";
 export type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export interface ISimplifiedDBAdaptor {
   ref: (path: string) => any;
@@ -7,7 +8,7 @@ export function slashNotation(path: string) {
   return path.replace(/\./g, "/");
 }
 
-export interface ISerializedQueryIdentity<T = any> {
+export interface ISerializedQueryIdentity<T = IDictionary> {
   orderBy: IOrderByType;
   orderByKey?: keyof T;
   limitToFirst?: number;
@@ -34,8 +35,8 @@ export type IConditionAndValue = [
  * Provides a way to serialize the full characteristics of a
  * Firebase query
  */
-export class SerializedQuery<T = any> {
-  public static path<T = any>(path: string = "/") {
+export class SerializedQuery<T extends object = IDictionary> {
+  public static path<T extends object = IDictionary>(path: string = "/") {
     return new SerializedQuery<T>(path);
   }
   public db: ISimplifiedDBAdaptor;
@@ -226,9 +227,7 @@ export class SerializedQuery<T = any> {
   private validateNoKey(caller: string, key: string) {
     if (key && this._orderBy === "orderByKey") {
       throw new Error(
-        `You can not use the "key" parameter with ${caller}() when using the ${
-          this._orderBy
-        } sort.`
+        `You can not use the "key" parameter with ${caller}() when using the ${this._orderBy} sort.`
       );
     }
   }
