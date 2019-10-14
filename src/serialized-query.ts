@@ -35,7 +35,7 @@ export type IConditionAndValue = [
  * Provides a way to serialize the full characteristics of a
  * Firebase query
  */
-export class SerializedQuery<T extends object = IDictionary> {
+export class SerializedQuery<T = IDictionary> {
   public static path<T extends object = IDictionary>(path: string = "/") {
     return new SerializedQuery<T>(path);
   }
