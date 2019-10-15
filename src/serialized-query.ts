@@ -9,21 +9,26 @@ export function slashNotation(path: string) {
 }
 
 export interface ISerializedQueryIdentity<T = IDictionary> {
-  orderBy: IOrderByType;
+  orderBy: IQueryOrderType;
   orderByKey?: keyof T;
   limitToFirst?: number;
   limitToLast?: number;
   startAt?: string;
+  startAtKey?: string;
   endAt?: string;
+  endAtKey?: string;
   equalTo?: string;
+  equalToKey?: string;
   path: string;
 }
 
-export type IOrderByType =
-  | "orderByChild"
-  | "orderByKey"
-  | "orderByValue"
-  | "orderByValue";
+export enum QueryOrderType {
+  orderByChild = "orderByChild",
+  orderByKey = "orderByKey",
+  orderByValue = "orderByValue"
+}
+
+export type IQueryOrderType = keyof typeof QueryOrderType;
 
 export type IComparisonOperator = "=" | ">" | "<";
 export type IConditionAndValue = [
@@ -43,11 +48,16 @@ export class SerializedQuery<T = IDictionary> {
   protected _path: string;
   protected _limitToFirst: number;
   protected _limitToLast: number;
-  protected _orderBy: IOrderByType = "orderByKey";
+
+  protected _orderBy: IQueryOrderType = "orderByKey";
   protected _orderKey: keyof T;
+
   protected _startAt: string;
+  protected _startAtKey?: string;
   protected _endAt: string;
+  protected _endAtKey?: string;
   protected _equalTo: string;
+  protected _equalToKey?: string;
   protected _handleSnapshot: (snap: DataSnapshot) => any;
 
   constructor(path: string = "/") {
@@ -110,20 +120,35 @@ export class SerializedQuery<T = IDictionary> {
   }
 
   public startAt(value: any, key?: string) {
-    this.validateNoKey("startAt", key);
+    this.validateKey("startAt", key, [
+      QueryOrderType.orderByChild,
+      QueryOrderType.orderByValue
+    ]);
     this._startAt = value;
+    this._startAtKey = key;
+
     return this;
   }
 
   public endAt(value: any, key?: string) {
-    this.validateNoKey("endAt", key);
+    this.validateKey("endAt", key, [
+      QueryOrderType.orderByChild,
+      QueryOrderType.orderByValue
+    ]);
     this._endAt = value;
+    this._endAtKey = key;
+
     return this;
   }
 
   public equalTo(value: any, key?: string) {
-    this.validateNoKey("equalTo", key);
+    this.validateKey("equalTo", key, [
+      QueryOrderType.orderByChild,
+      QueryOrderType.orderByValue
+    ]);
     this._equalTo = value;
+    this._equalToKey = key;
+
     return this;
   }
 
@@ -137,7 +162,8 @@ export class SerializedQuery<T = IDictionary> {
   }
 
   /**
-   * generate a Firebase query from serialized state
+   * Generates a Firebase `Query` from the _state_ in
+   * this serialized query
    */
   public deserialize(db?: ISimplifiedDBAdaptor) {
     if (!db) {
@@ -162,14 +188,14 @@ export class SerializedQuery<T = IDictionary> {
       q = q.limitToLast(this._limitToLast);
     }
     if (this._startAt) {
-      q = q.startAt(this._startAt);
+      q = q.startAt(this._startAt, this._startAtKey);
     }
     if (this._endAt) {
-      q = q.endAt(this._endAt);
+      q = q.endAt(this._endAt, this._endAtKey);
     }
 
     if (this._equalTo) {
-      q = q.equalTo(this._equalTo);
+      q = q.equalTo(this._equalTo, this._equalToKey);
     }
 
     return q;
@@ -210,8 +236,11 @@ export class SerializedQuery<T = IDictionary> {
       limitToFirst: this._limitToFirst,
       limitToLast: this._limitToLast,
       startAt: this._startAt,
+      startAtKey: this._startAtKey,
       endAt: this._endAt,
+      endAtKey: this._endAtKey,
       equalTo: this._equalTo,
+      equalToKey: this._equalToKey,
       path: this._path
     };
   }
@@ -224,10 +253,21 @@ export class SerializedQuery<T = IDictionary> {
     return JSON.stringify(this.identity, null, 2);
   }
 
-  private validateNoKey(caller: string, key: string) {
-    if (key && this._orderBy === "orderByKey") {
+  /**
+   * Ensures that when a `key` is passed in as part of the query
+   * modifiers -- such as "startAt", "endAt", etc. -- that the
+   * sorting strategy is valid.
+   *
+   * @param caller gives a simple string name for the method
+   * which is currently being called to modify the search filters
+   * @param key the key value that _might_ have been erroneously passed in
+   */
+  private validateKey(caller: string, key: string, allowed: IQueryOrderType[]) {
+    if (key && !allowed.includes(this._orderBy)) {
       throw new Error(
-        `You can not use the "key" parameter with ${caller}() when using the ${this._orderBy} sort.`
+        `You can not use the "key" parameter with ${caller}() when using a "${
+          this._orderBy
+        }" sort. Valid ordering strategies are: ${allowed.join(", ")}`
       );
     }
   }
