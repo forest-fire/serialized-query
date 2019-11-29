@@ -232,15 +232,25 @@ export class SerializedQuery<T = IDictionary> {
   public get identity(): ISerializedQueryIdentity<T> {
     return {
       orderBy: this._orderBy,
+      /** the property/key when using the `OrderByChild` sorting */
       orderByKey: this._orderKey,
       limitToFirst: this._limitToFirst,
       limitToLast: this._limitToLast,
       startAt: this._startAt,
-      startAtKey: this._startAtKey,
+      startAtKey:
+        this._startAtKey || this._orderBy === "orderByChild"
+          ? (this._orderKey as string)
+          : undefined,
       endAt: this._endAt,
-      endAtKey: this._endAtKey,
+      endAtKey:
+        this._endAtKey || this._orderBy === "orderByChild"
+          ? (this._orderKey as string)
+          : undefined,
       equalTo: this._equalTo,
-      equalToKey: this._equalToKey,
+      equalToKey:
+        this._equalToKey || this._orderBy === "orderByChild"
+          ? (this._orderKey as string)
+          : undefined,
       path: this._path
     };
   }
