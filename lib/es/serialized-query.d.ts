@@ -76,7 +76,7 @@ export declare class SerializedQuery<T = IDictionary> {
     /** execute the query as a one time fetch */
     execute(): Promise<any>;
     /** allows a shorthand notation for simple serialized queries */
-    where<V>(operation: IComparisonOperator, value: V): this;
+    where<V>(operation: IComparisonOperator, value: V, key?: string): this;
     readonly identity: ISerializedQueryIdentity<T>;
     toJSON(): ISerializedQueryIdentity<T>;
     toString(): string;

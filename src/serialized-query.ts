@@ -214,14 +214,14 @@ export class SerializedQuery<T = IDictionary> {
   }
 
   /** allows a shorthand notation for simple serialized queries */
-  public where<V>(operation: IComparisonOperator, value: V) {
+  public where<V>(operation: IComparisonOperator, value: V, key?: string) {
     switch (operation) {
       case "=":
-        return this.equalTo(value);
+        return this.equalTo(value, key);
       case ">":
-        return this.startAt(value);
+        return this.startAt(value, key);
       case "<":
-        return this.endAt(value);
+        return this.endAt(value, key);
       default:
         const e: any = new Error(`Unknown comparison operator: ${operation}`);
         e.code = "invalid-operator";
