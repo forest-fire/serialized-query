@@ -178,24 +178,24 @@ export class SerializedQuery<T = IDictionary> {
         q = q.orderByValue();
         break;
       case "orderByChild":
-        q = q.orderByChild(this._orderKey);
+        q = q.orderByChild(this.identity.orderByKey);
         break;
     }
     if (this._limitToFirst) {
-      q = q.limitToFirst(this._limitToFirst);
+      q = q.limitToFirst(this.identity.limitToFirst);
     }
     if (this._limitToLast) {
-      q = q.limitToLast(this._limitToLast);
+      q = q.limitToLast(this.identity.limitToLast);
     }
     if (this._startAt) {
-      q = q.startAt(this._startAt, this._startAtKey);
+      q = q.startAt(this.identity.startAt, this.identity.startAtKey);
     }
     if (this._endAt) {
-      q = q.endAt(this._endAt, this._endAtKey);
+      q = q.endAt(this.identity.endAt, this.identity.endAtKey);
     }
 
     if (this._equalTo) {
-      q = q.equalTo(this._equalTo, this._equalToKey);
+      q = q.equalTo(this.identity.equalTo, this.identity.equalToKey);
     }
 
     return q;

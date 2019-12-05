@@ -45,7 +45,7 @@ export declare class SerializedQuery<T = IDictionary> {
     protected _equalToKey?: string;
     protected _handleSnapshot: (snap: DataSnapshot) => any;
     constructor(path?: string);
-    readonly path: string;
+    get path(): string;
     setPath(path: string): this;
     /**
      * hashCode
@@ -77,7 +77,7 @@ export declare class SerializedQuery<T = IDictionary> {
     execute(): Promise<any>;
     /** allows a shorthand notation for simple serialized queries */
     where<V>(operation: IComparisonOperator, value: V, key?: string): this;
-    readonly identity: ISerializedQueryIdentity<T>;
+    get identity(): ISerializedQueryIdentity<T>;
     toJSON(): ISerializedQueryIdentity<T>;
     toString(): string;
     /**
