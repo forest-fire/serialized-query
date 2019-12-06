@@ -1,4 +1,5 @@
 import { IDictionary } from "common-types";
+import { Query } from "@firebase/database-types";
 export declare type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export interface ISimplifiedDBAdaptor {
     ref: (path: string) => any;
@@ -36,13 +37,13 @@ export declare class SerializedQuery<T = IDictionary> {
     protected _limitToFirst: number;
     protected _limitToLast: number;
     protected _orderBy: IQueryOrderType;
-    protected _orderKey: keyof T;
+    protected _orderKey: keyof T & string;
     protected _startAt: string;
-    protected _startAtKey?: string;
+    protected _startAtKey?: keyof T & string;
     protected _endAt: string;
-    protected _endAtKey?: string;
+    protected _endAtKey?: keyof T & string;
     protected _equalTo: string;
-    protected _equalToKey?: string;
+    protected _equalToKey?: keyof T & string;
     protected _handleSnapshot: (snap: DataSnapshot) => any;
     constructor(path?: string);
     get path(): string;
@@ -55,12 +56,12 @@ export declare class SerializedQuery<T = IDictionary> {
     hashCode(): number;
     limitToFirst(num: number): this;
     limitToLast(num: number): this;
-    orderByChild(child: keyof T): this;
+    orderByChild(child: keyof T & string): this;
     orderByValue(): this;
     orderByKey(): this;
-    startAt(value: any, key?: string): this;
-    endAt(value: any, key?: string): this;
-    equalTo(value: any, key?: string): this;
+    startAt(value: any, key?: keyof T & string): this;
+    endAt(value: any, key?: keyof T & string): this;
+    equalTo(value: any, key?: keyof T & string): this;
     /**
      * Allows the DB interface to be setup early, allowing clients
      * to call execute without any params
@@ -70,13 +71,13 @@ export declare class SerializedQuery<T = IDictionary> {
      * Generates a Firebase `Query` from the _state_ in
      * this serialized query
      */
-    deserialize(db?: ISimplifiedDBAdaptor): any;
+    deserialize(db?: ISimplifiedDBAdaptor): Query;
     /** allows you to add a handler/transformer for snapshots with the results of the execute() method */
     handleSnapshot(fn: (snap: DataSnapshot) => any): this;
     /** execute the query as a one time fetch */
     execute(): Promise<any>;
     /** allows a shorthand notation for simple serialized queries */
-    where<V>(operation: IComparisonOperator, value: V, key?: string): this;
+    where<V>(operation: IComparisonOperator, value: V, key?: keyof T & string): this;
     get identity(): ISerializedQueryIdentity<T>;
     toJSON(): ISerializedQueryIdentity<T>;
     toString(): string;

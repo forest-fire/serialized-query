@@ -13,30 +13,35 @@ const peopleDataset = () => ({
       a: {
         name: "Oldy McOldy",
         age: 99,
+        favoriteColor: "blue",
         createdAt: new Date().getTime() - 100000,
         lastUpdated: new Date().getTime()
       },
       b: {
         name: "Midlife Crises",
         age: 50,
+        favoriteColor: "blue",
         createdAt: new Date().getTime() - 200005,
         lastUpdated: new Date().getTime() - 5000
       },
       c: {
         name: "Babyface Bob",
         age: 3,
+        favoriteColor: "blue",
         createdAt: new Date().getTime() - 200000,
         lastUpdated: new Date().getTime() - 2000
       },
       d: {
         name: "Punkass Teen",
         age: 17,
+        favoriteColor: "green",
         createdAt: new Date().getTime() - 100005,
         lastUpdated: new Date().getTime() - 10000
       },
       e: {
         name: "Old Fart",
         age: 98,
+        favoriteColor: "green",
         createdAt: new Date().getTime() - 100005,
         lastUpdated: new Date().getTime() - 10000
       }
@@ -71,7 +76,9 @@ describe("Serialized Query: ", () => {
   it.skip("orderByChild() allows server side to filter appropriate records", async () => {
     mockDb.mock.updateDB(peopleDataset());
     await helpers.wait(50);
-    const query = new SerializedQuery<Person>().orderByChild("age").limitToLast(2);
+    const query = new SerializedQuery<Person>()
+      .orderByChild("age")
+      .limitToLast(2);
     // const list = await List.fromQuery(Person, query);
 
     // expect(list.data).to.have.lengthOf(2);
@@ -87,13 +94,19 @@ describe("Serialized Query: ", () => {
     const foo = new SerializedQuery("/foo/bar").orderByChild("goober");
     const bar = new SerializedQuery("/foo/bar").orderByChild("goober");
     expect(foo.hashCode()).to.equal(bar.hashCode());
-    const foo2 = new SerializedQuery("/foo/bar2").orderByChild("goober").limitToFirst(5);
-    const bar2 = new SerializedQuery("/foo/bar2").orderByChild("goober").limitToFirst(5);
+    const foo2 = new SerializedQuery("/foo/bar2")
+      .orderByChild("goober")
+      .limitToFirst(5);
+    const bar2 = new SerializedQuery("/foo/bar2")
+      .orderByChild("goober")
+      .limitToFirst(5);
     expect(foo2.hashCode()).to.equal(bar2.hashCode());
   });
 
   it("different query structure gives different hashCode", async () => {
-    const foo2 = new SerializedQuery("/foo/bar").orderByChild("goober").limitToFirst(5);
+    const foo2 = new SerializedQuery("/foo/bar")
+      .orderByChild("goober")
+      .limitToFirst(5);
     const bar2 = new SerializedQuery("/foo/bar").orderByChild("goober");
     expect(foo2.hashCode()).to.not.equal(bar2.hashCode());
   });
@@ -105,5 +118,12 @@ describe("Serialized Query: ", () => {
     expect(foo.identity.orderByKey).to.equal("goober");
     expect(foo.identity.limitToFirst).to.equal(undefined);
     expect(foo.identity.startAt).to.equal(undefined);
+  });
+
+  it("setting different props for equalTo and orderByChild behaves as expected", async () => {
+    const q = new SerializedQuery()
+      .orderByChild("foobar")
+      .equalTo("foo", "bar");
+    expect(q.identity.equalToKey).is.equal("bar");
   });
 });
