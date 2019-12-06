@@ -1,4 +1,5 @@
 import { IDictionary } from "common-types";
+import { Query, Reference } from "@firebase/database-types";
 export type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export interface ISimplifiedDBAdaptor {
   ref: (path: string) => any;
@@ -50,14 +51,14 @@ export class SerializedQuery<T = IDictionary> {
   protected _limitToLast: number;
 
   protected _orderBy: IQueryOrderType = "orderByKey";
-  protected _orderKey: keyof T;
+  protected _orderKey: keyof T & string;
 
   protected _startAt: string;
-  protected _startAtKey?: string;
+  protected _startAtKey?: keyof T & string;
   protected _endAt: string;
-  protected _endAtKey?: string;
+  protected _endAtKey?: keyof T & string;
   protected _equalTo: string;
-  protected _equalToKey?: string;
+  protected _equalToKey?: keyof T & string;
   protected _handleSnapshot: (snap: DataSnapshot) => any;
 
   constructor(path: string = "/") {
@@ -103,7 +104,7 @@ export class SerializedQuery<T = IDictionary> {
     return this;
   }
 
-  public orderByChild(child: keyof T) {
+  public orderByChild(child: keyof T & string) {
     this._orderBy = "orderByChild";
     this._orderKey = child;
     return this;
@@ -119,7 +120,7 @@ export class SerializedQuery<T = IDictionary> {
     return this;
   }
 
-  public startAt(value: any, key?: string) {
+  public startAt(value: any, key?: keyof T & string) {
     this.validateKey("startAt", key, [
       QueryOrderType.orderByChild,
       QueryOrderType.orderByValue
@@ -130,7 +131,7 @@ export class SerializedQuery<T = IDictionary> {
     return this;
   }
 
-  public endAt(value: any, key?: string) {
+  public endAt(value: any, key?: keyof T & string) {
     this.validateKey("endAt", key, [
       QueryOrderType.orderByChild,
       QueryOrderType.orderByValue
@@ -141,13 +142,14 @@ export class SerializedQuery<T = IDictionary> {
     return this;
   }
 
-  public equalTo(value: any, key?: string) {
+  public equalTo(value: any, key?: keyof T & string) {
+    this._equalTo = value;
+    this._equalToKey = key;
+
     this.validateKey("equalTo", key, [
       QueryOrderType.orderByChild,
       QueryOrderType.orderByValue
     ]);
-    this._equalTo = value;
-    this._equalToKey = key;
 
     return this;
   }
@@ -165,11 +167,11 @@ export class SerializedQuery<T = IDictionary> {
    * Generates a Firebase `Query` from the _state_ in
    * this serialized query
    */
-  public deserialize(db?: ISimplifiedDBAdaptor) {
+  public deserialize(db?: ISimplifiedDBAdaptor): Query {
     if (!db) {
       db = this.db;
     }
-    let q = db.ref(this._path);
+    let q: Query = db.ref(this._path);
     switch (this._orderBy) {
       case "orderByKey":
         q = q.orderByKey();
@@ -178,23 +180,35 @@ export class SerializedQuery<T = IDictionary> {
         q = q.orderByValue();
         break;
       case "orderByChild":
-        q = q.orderByChild(this.identity.orderByKey);
+        q = q.orderByChild(this.identity.orderByKey as string);
         break;
     }
+
     if (this._limitToFirst) {
+      console.log("ltf");
+
       q = q.limitToFirst(this.identity.limitToFirst);
     }
     if (this._limitToLast) {
+      console.log("ltl");
+
       q = q.limitToLast(this.identity.limitToLast);
     }
     if (this._startAt) {
+      console.log("sa");
+
       q = q.startAt(this.identity.startAt, this.identity.startAtKey);
     }
     if (this._endAt) {
+      console.log("ea");
+
       q = q.endAt(this.identity.endAt, this.identity.endAtKey);
     }
 
+    console.log("equalTo:", this._equalTo);
+
     if (this._equalTo) {
+      console.log("et", this.identity.equalTo, this.identity.equalToKey);
       q = q.equalTo(this.identity.equalTo, this.identity.equalToKey);
     }
 
@@ -214,7 +228,11 @@ export class SerializedQuery<T = IDictionary> {
   }
 
   /** allows a shorthand notation for simple serialized queries */
-  public where<V>(operation: IComparisonOperator, value: V, key?: string) {
+  public where<V>(
+    operation: IComparisonOperator,
+    value: V,
+    key?: keyof T & string
+  ) {
     switch (operation) {
       case "=":
         return this.equalTo(value, key);
@@ -230,6 +248,8 @@ export class SerializedQuery<T = IDictionary> {
   }
 
   public get identity(): ISerializedQueryIdentity<T> {
+    console.log(this._equalToKey);
+
     return {
       orderBy: this._orderBy,
       /** the property/key when using the `OrderByChild` sorting */
@@ -237,20 +257,23 @@ export class SerializedQuery<T = IDictionary> {
       limitToFirst: this._limitToFirst,
       limitToLast: this._limitToLast,
       startAt: this._startAt,
-      startAtKey:
-        this._startAtKey || this._orderBy === "orderByChild"
-          ? (this._orderKey as string)
-          : undefined,
+      startAtKey: this._startAtKey
+        ? this._startAtKey
+        : this._orderBy === "orderByChild"
+        ? this._orderKey
+        : undefined,
       endAt: this._endAt,
-      endAtKey:
-        this._endAtKey || this._orderBy === "orderByChild"
-          ? (this._orderKey as string)
-          : undefined,
+      endAtKey: this._endAtKey
+        ? this._endAtKey
+        : this._orderBy === "orderByChild"
+        ? this._orderKey
+        : undefined,
       equalTo: this._equalTo,
-      equalToKey:
-        this._equalToKey || this._orderBy === "orderByChild"
-          ? (this._orderKey as string)
-          : undefined,
+      equalToKey: this._equalToKey
+        ? this._equalToKey
+        : this._orderBy === "orderByChild"
+        ? this._orderKey
+        : undefined,
       path: this._path
     };
   }
@@ -272,7 +295,14 @@ export class SerializedQuery<T = IDictionary> {
    * which is currently being called to modify the search filters
    * @param key the key value that _might_ have been erroneously passed in
    */
-  private validateKey(caller: string, key: string, allowed: IQueryOrderType[]) {
+  private validateKey(
+    caller: string,
+    key: keyof T,
+    allowed: IQueryOrderType[]
+  ) {
+    console.log(key);
+    console.log(this.identity);
+
     if (key && !allowed.includes(this._orderBy)) {
       throw new Error(
         `You can not use the "key" parameter with ${caller}() when using a "${

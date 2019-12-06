@@ -7,8 +7,7 @@ import {
   fk,
   model,
   ownedBy,
-  hasMany,
-  inverse
+  hasMany
 } from "firemodel";
 import { Company } from "./company";
 import { IDictionary } from "common-types";
@@ -19,6 +18,7 @@ export class Person extends Model {
   @property @length(20) public name: string;
   @property public age?: number;
   @property public gender?: "male" | "female" | "other";
+  @property public favoriteColor?: string;
   @property public scratchpad?: IDictionary;
   // prettier-ignore
   @property @pushKey public tags?: IDictionary<string>;

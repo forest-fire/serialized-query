@@ -9,10 +9,10 @@
     "noImplicitAny": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "noEmit": true,
+    "outDir": "./lib/cjs",
     "removeComments": false,
     "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src/**/*", "test/**/*"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules/**/*", "node_modules/firemock/**"]
 }

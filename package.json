@@ -1,6 +1,6 @@
 {
   "name": "serialized-query",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "A simple Typescript class to serialize Firebase queries",
   "license": "MIT",
   "repository": "https://github.com/forest-fire/serialized-query.git",
@@ -20,7 +20,7 @@
   "scripts": {
     "clean": "rimraf lib",
     "clean:nuclear": "rimraf lib dist node_modeles && yarn cache clean && rm yarn.lock && yarn && yarn upgrade",
-    "build": "rm -rf lib && tsc -P tsconfig.esnext.json && tsc -P tsconfig.json",
+    "build": "rm -rf lib && tsc -P tsconfig.esnext.json && tsc -P tsconfig.cjs.json",
     "test": "ts-node ./scripts/test.ts "
   },
   "dependencies": {
@@ -35,11 +35,11 @@
     "@types/rimraf": "^2.0.2",
     "@types/shelljs": "^0.8.5",
     "@types/stack-trace": "^0.0.29",
-    "abstracted-admin": "^0.32.2",
+    "abstracted-admin": "^0.35.0",
     "chai": "^4.2.0",
     "chalk": "^2.4.2",
-    "firemock": "^0.32.11",
-    "firemodel": "^0.32.7",
+    "firemock": "^0.35.7",
+    "firemodel": "^0.35.4",
     "js-yaml": "^3.13.1",
     "lodash": "^4.17.11",
     "mocha": "^6.2.1",
