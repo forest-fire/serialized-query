@@ -1,6 +1,6 @@
 {
   "name": "serialized-query",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "A simple Typescript class to serialize Firebase queries",
   "license": "MIT",
   "repository": "https://github.com/forest-fire/serialized-query.git",
@@ -24,10 +24,10 @@
     "test": "ts-node ./scripts/test.ts "
   },
   "dependencies": {
+    "@firebase/database-types": "0.4.9",
     "common-types": "^1.12.13"
   },
   "devDependencies": {
-    "@firebase/database-types": "0.4.9",
     "@types/chai": "^4.1.7",
     "@types/chalk": "^2.2.0",
     "@types/mocha": "^2.2.41",
