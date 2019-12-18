@@ -58,7 +58,7 @@
     "@firebase/util" "0.2.36"
     tslib "1.10.0"
 
-"@firebase/database-types@0.4.10":
+"@firebase/database-types@0.4.10", "@firebase/database-types@^0.4.10":
   version "0.4.10"
   resolved "https://registry.yarnpkg.com/@firebase/database-types/-/database-types-0.4.10.tgz#baa10bc78cfb57dd6159e0264b8305994a8e24d0"
   integrity sha512-66puLsckt5HASgRN3CfhLn2iuGrgCjfH3u17OL0f5MtEweYLx+yW2QW5d539Wx30xD4B+INEdaRetw6xEa9t7g==
@@ -108,7 +108,7 @@
   dependencies:
     tslib "1.10.0"
 
-"@firebase/util@0.2.36":
+"@firebase/util@0.2.36", "@firebase/util@^0.2.36":
   version "0.2.36"
   resolved "https://registry.yarnpkg.com/@firebase/util/-/util-0.2.36.tgz#0c4edb3573f567f407b76dd767691fe72819acf2"
   integrity sha512-AqrXca+8rMbPyp7zMO9BoZrdbb8wsT5kmqwge9QW4ZBxTTSQrvBs7VylGx5Ede4VbhqRJvkmo7G73/dp2L+wbA==
