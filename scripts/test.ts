@@ -1,12 +1,10 @@
 // tslint:disable:no-implicit-dependencies
 import chalk from "chalk";
 import { exec } from "shelljs";
-import * as rm from "rimraf";
+import rm from "rimraf";
 import * as process from "process";
-import * as program from "commander";
+import program from "commander";
 import "../test/testing/test-console";
-import { stdout, stderr } from "test-console";
-import { execSync } from "child_process";
 
 function getScope(files: string): string {
   let fileScope: string;
@@ -26,7 +24,9 @@ function getScope(files: string): string {
   }
 
   console.log(
-    chalk.green(`${chalk.bold("mocha")} --compilers ts:ts-node/register  ${fileScope}`)
+    chalk.green(
+      `${chalk.bold("mocha")} --compilers ts:ts-node/register  ${fileScope}`
+    )
   );
 
   return fileScope;
@@ -62,7 +62,12 @@ if (process.argv.length === 2) {
 
 program
   .arguments("[files]")
-  .option("-s, --stage [env]", "Environment to use", /^(dev|test|stage|prod)^/, "test")
+  .option(
+    "-s, --stage [env]",
+    "Environment to use",
+    /^(dev|test|stage|prod)^/,
+    "test"
+  )
   .option(
     "-f, --files",
     "an alternative syntax to just specifying files as first argument on command line"

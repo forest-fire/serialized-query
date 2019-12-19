@@ -127,7 +127,7 @@ describe("Serialized Query: ", () => {
     const sq = new SerializedQuery(List.dbPath(Person)).orderByChild("age");
     console.log(sq.deserialize(mockDb));
 
-    console.log(mockDb.getList(sq.deserialize(mockDb)));
+    console.log(mockDb.getList(sq));
   });
 
   it("equalTo() query filters down to right results for static pathed model", async () => {
