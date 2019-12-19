@@ -9,7 +9,7 @@ import {
   ownedBy,
   hasMany
 } from "firemodel";
-import { Company } from "./company";
+import { Company } from "./Company";
 import { IDictionary } from "common-types";
 
 @model({ dbOffset: "authenticated" })

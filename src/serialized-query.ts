@@ -248,8 +248,6 @@ export class SerializedQuery<T = IDictionary> {
   }
 
   public get identity(): ISerializedQueryIdentity<T> {
-    console.log(this._equalToKey);
-
     return {
       orderBy: this._orderBy,
       /** the property/key when using the `OrderByChild` sorting */
