@@ -185,30 +185,19 @@ export class SerializedQuery<T = IDictionary> {
     }
 
     if (this._limitToFirst) {
-      console.log("ltf");
-
       q = q.limitToFirst(this.identity.limitToFirst);
     }
     if (this._limitToLast) {
-      console.log("ltl");
-
       q = q.limitToLast(this.identity.limitToLast);
     }
     if (this._startAt) {
-      console.log("sa");
-
       q = q.startAt(this.identity.startAt, this.identity.startAtKey);
     }
     if (this._endAt) {
-      console.log("ea");
-
       q = q.endAt(this.identity.endAt, this.identity.endAtKey);
     }
 
-    console.log("equalTo:", this._equalTo);
-
     if (this._equalTo) {
-      console.log("et", this.identity.equalTo, this.identity.equalToKey);
       q = q.equalTo(this.identity.equalTo, this.identity.equalToKey);
     }
 
@@ -298,9 +287,6 @@ export class SerializedQuery<T = IDictionary> {
     key: keyof T,
     allowed: IQueryOrderType[]
   ) {
-    console.log(key);
-    console.log(this.identity);
-
     if (key && !allowed.includes(this._orderBy)) {
       throw new Error(
         `You can not use the "key" parameter with ${caller}() when using a "${
