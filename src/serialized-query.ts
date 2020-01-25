@@ -1,5 +1,6 @@
 import { IDictionary } from "common-types";
 import { Query, Reference } from "@firebase/database-types";
+import { DB } from "abstracted-admin";
 export type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export interface ISimplifiedDBAdaptor {
   ref: (path: string) => any;
@@ -45,7 +46,7 @@ export class SerializedQuery<T = IDictionary> {
   public static path<T extends object = IDictionary>(path: string = "/") {
     return new SerializedQuery<T>(path);
   }
-  public db: ISimplifiedDBAdaptor;
+  public db: DB;
   protected _path: string;
   protected _limitToFirst: number;
   protected _limitToLast: number;
@@ -158,7 +159,7 @@ export class SerializedQuery<T = IDictionary> {
    * Allows the DB interface to be setup early, allowing clients
    * to call execute without any params
    */
-  public setDB(db: ISimplifiedDBAdaptor) {
+  public setDB(db: DB) {
     this.db = db;
     return this;
   }
@@ -167,7 +168,7 @@ export class SerializedQuery<T = IDictionary> {
    * Generates a Firebase `Query` from the _state_ in
    * this serialized query
    */
-  public deserialize(db?: ISimplifiedDBAdaptor): Query {
+  public deserialize(db: DB): Query {
     if (!db) {
       db = this.db;
     }
@@ -198,7 +199,9 @@ export class SerializedQuery<T = IDictionary> {
     }
 
     if (this._equalTo) {
-      q = q.equalTo(this.identity.equalTo, this.identity.equalToKey);
+      q = this.identity.equalToKey
+        ? q.equalTo(this.identity.equalTo, this.identity.equalToKey)
+        : q.equalTo(this.identity.equalTo);
     }
 
     return q;
@@ -211,8 +214,14 @@ export class SerializedQuery<T = IDictionary> {
   }
 
   /** execute the query as a one time fetch */
-  public async execute() {
-    const snap = await this.deserialize().once("value");
+  public async execute(db?: DB) {
+    const database = db || this.db;
+    if (!database) {
+      throw new Error(
+        `Attempt to call serialized-query's execute() method but no database was passed in (or set with setDB)`
+      );
+    }
+    const snap = await this.deserialize(database).once("value");
     return this._handleSnapshot ? this._handleSnapshot(snap) : snap;
   }
 
@@ -244,23 +253,23 @@ export class SerializedQuery<T = IDictionary> {
       limitToFirst: this._limitToFirst,
       limitToLast: this._limitToLast,
       startAt: this._startAt,
-      startAtKey: this._startAtKey
-        ? this._startAtKey
-        : this._orderBy === "orderByChild"
-        ? this._orderKey
-        : undefined,
+      startAtKey: this._startAtKey,
+      // ? this._startAtKey
+      // : this._orderBy === "orderByChild"
+      // ? this._orderKey
+      // : undefined,
       endAt: this._endAt,
-      endAtKey: this._endAtKey
-        ? this._endAtKey
-        : this._orderBy === "orderByChild"
-        ? this._orderKey
-        : undefined,
+      endAtKey: this._endAtKey,
+      // ? this._endAtKey
+      // : this._orderBy === "orderByChild"
+      // ? this._orderKey
+      // : undefined,
       equalTo: this._equalTo,
-      equalToKey: this._equalToKey
-        ? this._equalToKey
-        : this._orderBy === "orderByChild"
-        ? this._orderKey
-        : undefined,
+      equalToKey: this._equalToKey,
+      // ? this._equalToKey
+      // : this._orderBy === "orderByChild"
+      // ? this._orderKey
+      // : undefined,
       path: this._path
     };
   }

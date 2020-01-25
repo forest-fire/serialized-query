@@ -1,85 +1,66 @@
-import { Record, List, Watch, FireModel } from "firemodel";
+import { expect } from "chai";
+import { List } from "firemodel";
 import { DB } from "abstracted-admin";
-import * as chai from "chai";
-const expect = chai.expect;
-import "reflect-metadata";
 import { Person } from "./testing/Person";
 import * as helpers from "./testing/helpers";
-import { IDictionary, wait, pathJoin } from "common-types";
 import { SerializedQuery } from "../src/serialized-query";
-
+import { hashToArray } from "typed-conversions";
+import peopleDataset from "./data/people";
 helpers.setupEnv();
-const peopleDataset = () => ({
-  authenticated: {
-    people: {
-      a: {
-        name: "Oldy McOldy",
-        age: 99,
-        favoriteColor: "blue",
-        createdAt: new Date().getTime() - 100000,
-        lastUpdated: new Date().getTime()
-      },
-      b: {
-        name: "Midlife Crises",
-        age: 50,
-        favoriteColor: "blue",
-        createdAt: new Date().getTime() - 200005,
-        lastUpdated: new Date().getTime() - 5000
-      },
-      c: {
-        name: "Babyface Bob",
-        age: 3,
-        favoriteColor: "blue",
-        createdAt: new Date().getTime() - 200000,
-        lastUpdated: new Date().getTime() - 2000
-      },
-      d: {
-        name: "Punkass Teen",
-        age: 17,
-        favoriteColor: "green",
-        createdAt: new Date().getTime() - 100005,
-        lastUpdated: new Date().getTime() - 10000
-      },
-      e: {
-        name: "Old Fart",
-        age: 98,
-        favoriteColor: "green",
-        createdAt: new Date().getTime() - 100005,
-        lastUpdated: new Date().getTime() - 10000
-      }
-    }
-  }
-});
 
 let db: DB;
 
 describe("Tests using REAL db =>’", () => {
   before(async () => {
     db = await DB.connect();
-    FireModel.defaultDb = db;
-    db.set("/", peopleDataset());
+    List.defaultDb = db;
+    await db.set("/", peopleDataset());
   });
   after(async () => {
     await db.remove(`/authenticated/fancyPeople`, true);
     db.remove("/authenticated");
   });
 
-  it.only("equalTo() deserializes into valid response", async () => {
+  it("equalTo() deserializes into valid response", async () => {
     const q = new SerializedQuery(List.dbPath(Person))
       .orderByChild("favoriteColor")
-      .equalTo("green", "favoriteColor");
-    const r = db.ref();
-    const fbQuery = q.deserialize({ ref: () => r });
-    const snap = (await fbQuery.once("value")).child("authenticated/people");
-    console.log(snap.val());
-    expect(snap.hasChildren()).to.equal(true);
+      .equalTo("green");
+
+    const deserializedQuery = q.deserialize(db);
+    const manualQuery = db
+      .ref("/authenticated/people")
+      .orderByChild("favoriteColor")
+      .equalTo("green");
+
+    const manualJSON = hashToArray((await manualQuery.once("value")).toJSON());
+    const deserializedJSON = hashToArray(
+      (await deserializedQuery.once("value")).toJSON()
+    );
+
+    expect(manualJSON.length).to.equal(deserializedJSON.length);
+    expect(deserializedJSON.length).to.be.greaterThan(0);
+    deserializedJSON.forEach(i => expect(i.favoriteColor).to.equal("green"));
   });
 
-  it("where clause on non-dynamic path", async () => {
-    throw new Error("test not written");
+  it("limit query reduces result set", async () => {
+    const q = new SerializedQuery(List.dbPath(Person))
+      .orderByChild("age")
+      .limitToFirst(2);
+
+    const deserializedJson: Person[] = hashToArray(
+      (await q.execute(db)).toJSON()
+    );
+    const sortedPeople = hashToArray<Person>(
+      peopleDataset().authenticated.people
+    ).sort((a, b) => (a.age > b.age ? 1 : -1));
+
+    expect(deserializedJson.length).to.equal(2);
+    expect(deserializedJson[0].age).to.equal(sortedPeople[0].age);
   });
 
-  it("where clause on dynamic path", async () => {
-    throw new Error("test not written");
+  it("Firemodel List.where() reduces the result set to appropriate records", async () => {
+    const peeps = await List.where(Person, "favoriteColor", "green");
+    const people = hashToArray<Person>(peopleDataset().authenticated.people);
+    expect(peeps.length).to.equal(people.length);
   });
 });
