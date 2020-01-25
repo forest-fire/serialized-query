@@ -1,5 +1,6 @@
 import { IDictionary } from "common-types";
 import { Query } from "@firebase/database-types";
+import { DB } from "abstracted-admin";
 export declare type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export interface ISimplifiedDBAdaptor {
     ref: (path: string) => any;
@@ -32,7 +33,7 @@ export declare type IConditionAndValue = [IComparisonOperator, boolean | string 
  */
 export declare class SerializedQuery<T = IDictionary> {
     static path<T extends object = IDictionary>(path?: string): SerializedQuery<T>;
-    db: ISimplifiedDBAdaptor;
+    db: DB;
     protected _path: string;
     protected _limitToFirst: number;
     protected _limitToLast: number;
@@ -66,16 +67,16 @@ export declare class SerializedQuery<T = IDictionary> {
      * Allows the DB interface to be setup early, allowing clients
      * to call execute without any params
      */
-    setDB(db: ISimplifiedDBAdaptor): this;
+    setDB(db: DB): this;
     /**
      * Generates a Firebase `Query` from the _state_ in
      * this serialized query
      */
-    deserialize(db?: ISimplifiedDBAdaptor): Query;
+    deserialize(db: DB): Query;
     /** allows you to add a handler/transformer for snapshots with the results of the execute() method */
     handleSnapshot(fn: (snap: DataSnapshot) => any): this;
     /** execute the query as a one time fetch */
-    execute(): Promise<any>;
+    execute(db?: DB): Promise<any>;
     /** allows a shorthand notation for simple serialized queries */
     where<V>(operation: IComparisonOperator, value: V, key?: keyof T & string): this;
     get identity(): ISerializedQueryIdentity<T>;
