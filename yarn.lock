@@ -883,10 +883,10 @@ firemock@^0.36.0:
     serialized-query "^0.10.0"
     typed-conversions "^0.10.1"
 
-firemodel@^0.36.6:
-  version "0.36.6"
-  resolved "https://registry.yarnpkg.com/firemodel/-/firemodel-0.36.6.tgz#335447df837da4bcf95fc0fa504826cb64753fcd"
-  integrity sha512-dXH0qTi+zDuWjPXzpKj/RIgMZ76ysgm0ekeLtyA0HOU6fwZuswy/tbf7ziNoH161TnepXWuK07Mhm7kBIK/F8A==
+firemodel@^0.36.11:
+  version "0.36.11"
+  resolved "https://registry.yarnpkg.com/firemodel/-/firemodel-0.36.11.tgz#04739e52ecbc974b9046944fa761039cab0455fd"
+  integrity sha512-oNzogVMqxjYNRFFemihoXWNno3MVpsTo3IWn23OzuR+6RrP+nmy4nQqD5WDrqkeyskGF7Th0wSlQ6o1RbbSRlw==
   dependencies:
     abstracted-firebase "^0.36.0"
     common-types "^1.12.18"
@@ -899,7 +899,7 @@ firemodel@^0.36.6:
     lodash.first "^3.0.0"
     pluralize "^8.0.0"
     reflect-metadata "^0.1.13"
-    serialized-query "^0.10.3"
+    serialized-query "^0.10.5"
     set-value "^3.0.0"
     typed-conversions "^0.10.1"
     wait-in-parallel "^1.2.6"
@@ -1792,14 +1792,14 @@ semver@^7.0.0:
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.1.1.tgz#29104598a197d6cbe4733eeecbe968f7b43a9667"
   integrity sha512-WfuG+fl6eh3eZ2qAf6goB7nhiCd7NPXhmyFxigB/TOkQyeLP8w8GsVehvtGNtnNmyboz4TgeK40B1Kbql/8c5A==
 
-serialized-query@^0.10.0, serialized-query@^0.10.3:
-  version "0.10.3"
-  resolved "https://registry.yarnpkg.com/serialized-query/-/serialized-query-0.10.3.tgz#bdb8420612573b3d7d8c9ac16fa5642e127a9172"
-  integrity sha512-kfXVqRDunN1lYvzYU2FjKOBiEHnNj0aq1r+XcrsVtP5N9u9bSSwjzLVv94fVBKKpZLUHnfnjZ7i6qth3XYjkJA==
+serialized-query@^0.10.0, serialized-query@^0.10.5:
+  version "0.10.5"
+  resolved "https://registry.yarnpkg.com/serialized-query/-/serialized-query-0.10.5.tgz#a47f175819143401493e4300daeab2acb0cceb08"
+  integrity sha512-UAJ0Otu8Ps1ZGL01iMHSrshsptjfKyqi+YnO19iNDh2+CYenXevlBkWYQQupJUtUT6x6l0g7BbHl3AQz3baGJg==
   dependencies:
     "@firebase/database-types" "^0.4.10"
-    "@firebase/util" "^0.2.36"
-    common-types "^1.12.15"
+    "@firebase/util" "^0.2.38"
+    common-types "^1.12.18"
 
 set-blocking@^2.0.0:
   version "2.0.0"
