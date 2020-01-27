@@ -1,6 +1,5 @@
 import { IDictionary } from "common-types";
 import { Query } from "@firebase/database-types";
-import { RealTimeDB } from "abstracted-admin";
 export declare type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export interface ISimplifiedDBAdaptor {
     ref: (path: string) => any;
@@ -67,7 +66,7 @@ export declare class SerializedQuery<T = IDictionary> {
      * Allows the DB interface to be setup early, allowing clients
      * to call execute without any params
      */
-    setDB(db: RealTimeDB): this;
+    setDB(db: ISimplifiedDBAdaptor): this;
     /**
      * Generates a Firebase `Query` from the _state_ in
      * this serialized query
@@ -76,7 +75,7 @@ export declare class SerializedQuery<T = IDictionary> {
     /** allows you to add a handler/transformer for snapshots with the results of the execute() method */
     handleSnapshot(fn: (snap: DataSnapshot) => any): this;
     /** execute the query as a one time fetch */
-    execute(db?: RealTimeDB): Promise<any>;
+    execute(db?: ISimplifiedDBAdaptor): Promise<any>;
     /** allows a shorthand notation for simple serialized queries */
     where<V>(operation: IComparisonOperator, value: V, key?: keyof T & string): this;
     get identity(): ISerializedQueryIdentity<T>;
