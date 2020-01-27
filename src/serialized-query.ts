@@ -1,6 +1,5 @@
 import { IDictionary } from "common-types";
-import { Query, Reference } from "@firebase/database-types";
-import { RealTimeDB } from "abstracted-admin";
+import { Query } from "@firebase/database-types";
 export type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export interface ISimplifiedDBAdaptor {
   ref: (path: string) => any;
@@ -159,7 +158,7 @@ export class SerializedQuery<T = IDictionary> {
    * Allows the DB interface to be setup early, allowing clients
    * to call execute without any params
    */
-  public setDB(db: RealTimeDB) {
+  public setDB(db: ISimplifiedDBAdaptor) {
     this.db = db;
     return this;
   }
@@ -214,7 +213,7 @@ export class SerializedQuery<T = IDictionary> {
   }
 
   /** execute the query as a one time fetch */
-  public async execute(db?: RealTimeDB) {
+  public async execute(db?: ISimplifiedDBAdaptor) {
     const database = db || this.db;
     if (!database) {
       throw new Error(
