@@ -1,11 +1,12 @@
 import { expect } from "chai";
-import { List } from "firemodel";
-import { DB } from "abstracted-admin";
+import { List, Mock } from "firemodel";
+import { DB, RealTimeDB } from "abstracted-admin";
 import { Person } from "./testing/Person";
 import * as helpers from "./testing/helpers";
 import { SerializedQuery } from "../src/serialized-query";
 import { hashToArray } from "typed-conversions";
 import peopleDataset from "./data/people";
+import { DeepPerson } from "./testing/DeepPerson";
 helpers.setupEnv();
 
 let db: DB;
@@ -60,7 +61,26 @@ describe("Tests using REAL db =>’", () => {
 
   it("Firemodel List.where() reduces the result set to appropriate records", async () => {
     const peeps = await List.where(Person, "favoriteColor", "green");
-    const people = hashToArray<Person>(peopleDataset().authenticated.people);
+    const people = hashToArray<Person>(
+      peopleDataset().authenticated.people
+    ).filter(p => p.favoriteColor === "green");
+    expect(peeps.length).to.equal(people.length);
+  });
+
+  it("Firemodel List.where() reduces the result set to appropriate records (with a dynamic path)", async () => {
+    const mockDb = await DB.connect({ mocking: true });
+    await Mock(DeepPerson, mockDb).generate(5, {
+      favoriteColor: "green",
+      group: "group1"
+    });
+    await Mock(DeepPerson, mockDb).generate(5, {
+      favoriteColor: "blue",
+      group: "group1"
+    });
+    const peeps = await List.where(Person, "favoriteColor", "green");
+    const people = hashToArray<Person>(
+      peopleDataset().authenticated.people
+    ).filter(p => p.favoriteColor === "green");
     expect(peeps.length).to.equal(people.length);
   });
 });

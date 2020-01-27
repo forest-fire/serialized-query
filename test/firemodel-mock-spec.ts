@@ -80,10 +80,9 @@ describe("Serialized Query: ", () => {
     expect(foo.identity.startAt).to.equal(undefined);
   });
 
-  it.skip("equalTo() works when done manually", async () => {
+  it("equalTo() works when done manually", async () => {
     mockDb.mock.updateDB(peopleDataset());
     expect(List.dbPath(Person)).to.equal("authenticated/people");
-    const q = mockDb.ref(List.dbPath(Person)).orderByChild("age");
     const sq = new SerializedQuery(List.dbPath(Person)).orderByChild("age");
     console.log(sq.deserialize(mockDb));
 

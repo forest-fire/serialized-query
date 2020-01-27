@@ -1,6 +1,6 @@
 import { IDictionary } from "common-types";
 import { Query, Reference } from "@firebase/database-types";
-import { DB } from "abstracted-admin";
+import { RealTimeDB } from "abstracted-admin";
 export type DataSnapshot = import("@firebase/database-types").DataSnapshot;
 export interface ISimplifiedDBAdaptor {
   ref: (path: string) => any;
@@ -46,7 +46,7 @@ export class SerializedQuery<T = IDictionary> {
   public static path<T extends object = IDictionary>(path: string = "/") {
     return new SerializedQuery<T>(path);
   }
-  public db: DB;
+  public db: ISimplifiedDBAdaptor;
   protected _path: string;
   protected _limitToFirst: number;
   protected _limitToLast: number;
@@ -159,7 +159,7 @@ export class SerializedQuery<T = IDictionary> {
    * Allows the DB interface to be setup early, allowing clients
    * to call execute without any params
    */
-  public setDB(db: DB) {
+  public setDB(db: RealTimeDB) {
     this.db = db;
     return this;
   }
@@ -168,7 +168,7 @@ export class SerializedQuery<T = IDictionary> {
    * Generates a Firebase `Query` from the _state_ in
    * this serialized query
    */
-  public deserialize(db: DB): Query {
+  public deserialize(db: ISimplifiedDBAdaptor): Query {
     if (!db) {
       db = this.db;
     }
@@ -214,7 +214,7 @@ export class SerializedQuery<T = IDictionary> {
   }
 
   /** execute the query as a one time fetch */
-  public async execute(db?: DB) {
+  public async execute(db?: RealTimeDB) {
     const database = db || this.db;
     if (!database) {
       throw new Error(
@@ -299,7 +299,7 @@ export class SerializedQuery<T = IDictionary> {
     if (key && !allowed.includes(this._orderBy)) {
       throw new Error(
         `You can not use the "key" parameter with ${caller}() when using a "${
-          this._orderBy
+        this._orderBy
         }" sort. Valid ordering strategies are: ${allowed.join(", ")}`
       );
     }
