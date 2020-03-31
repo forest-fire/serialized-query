@@ -126,4 +126,14 @@ describe("Serialized Query: ", () => {
       .equalTo("foo", "bar");
     expect(q.identity.equalToKey).is.equal("bar");
   });
+
+  it.only("limitToFirst sets identity()", async () => {
+    const q = new SerializedQuery().orderByValue().limitToFirst(3);
+    expect(q.identity.limitToFirst).is.equal(3);
+  });
+
+  it.only("limitToLast sets identity()", async () => {
+    const q = new SerializedQuery().orderByValue().limitToLast(3);
+    expect(q.identity.limitToLast).is.equal(3);
+  });
 });
